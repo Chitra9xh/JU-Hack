@@ -1,0 +1,153 @@
+:root {
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+  color: #f4f4ee;
+  background: #111512;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+}
+
+.shell {
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+.shell-header {
+  max-width: 1120px;
+  margin: auto;
+  padding: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  border-bottom: 1px solid #303930;
+}
+
+.shell-brand {
+  color: #f4f4ee;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.shell-brand span {
+  color: #aebaaa;
+  font-weight: 400;
+}
+
+.shell-home-link {
+  color: #d5fa9c;
+  text-underline-offset: 5px;
+}
+
+.shell-home {
+  max-width: 1040px;
+  margin: auto;
+  padding: 64px 24px 40px;
+}
+
+.shell-eyebrow {
+  color: #d5fa9c;
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.shell-home h1 {
+  margin: 20px 0;
+  font-size: clamp(2.4rem, 7vw, 4.8rem);
+  line-height: 1.08;
+  letter-spacing: -0.045em;
+}
+
+.shell-description {
+  max-width: 540px;
+  color: #bac4b7;
+  line-height: 1.7;
+}
+
+.shell-options {
+  display: grid;
+  gap: 18px;
+  margin-top: 40px;
+}
+
+.shell-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 28px;
+  color: inherit;
+  text-decoration: none;
+  background: #1d251e;
+  border: 1px solid #3c493a;
+  border-radius: 20px;
+}
+
+.shell-card-label {
+  color: #b8caad;
+  font-size: 12px;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+.shell-card h2 {
+  margin: 32px 0 8px;
+  font-size: 1.7rem;
+  letter-spacing: -0.03em;
+}
+
+.shell-card p {
+  margin: 0 0 28px;
+  color: #bac4b7;
+  line-height: 1.6;
+}
+
+.shell-card-action {
+  margin-top: auto;
+  padding: 12px 18px;
+  color: #15200e;
+  background: #d5fa9c;
+  border-radius: 999px;
+  font-weight: 700;
+}
+
+.shell-card:hover {
+  border-color: #d5fa9c;
+}
+
+.shell a:focus-visible {
+  outline: 3px solid #d5fa9c;
+  outline-offset: 5px;
+}
+
+.shell-note {
+  max-width: 650px;
+  margin-top: 24px;
+  color: #aebaaa;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+@media (min-width: 700px) {
+  .shell-options {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 400px) {
+  .shell-brand span {
+    display: none;
+  }
+
+  .shell-card {
+    padding: 22px;
+  }
+}
