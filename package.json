@@ -1,0 +1,44 @@
+{
+  "name": "ju-hack",
+  "version": "1.0.0",
+  "description": "Starting the project",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Chitra9xh/JU-Hack.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Chitra9xh/JU-Hack/issues"
+  },
+  "homepage": "https://github.com/Chitra9xh/JU-Hack#readme",
+  "private": "true",
+  "type": "module",
+  "dependencies": {
+    "@mediapipe/tasks-vision": "^1.1.1",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "react-router-dom": "^7.18.4",
+    "three": "^0.186.1"
+  },
+  "devDependencies": {
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@types/three": "^0.186.0",
+    "@types/webxr": "^0.5.24",
+    "@vitejs/plugin-basic-ssl": "^2.3.0",
+    "@vitejs/plugin-react": "^6.1.2",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.5"
+  }
+}
