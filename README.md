@@ -8,7 +8,7 @@ npm install
 npm run dev
 ```
 
-Open `https://localhost:5173` on your laptop. The dev server uses a self-signed certificate, so the browser will warn once; accept it.
+Open `https://localhost:6969` on your laptop. The dev server uses a self-signed certificate, so the browser will warn once; accept it.
 
 ## Open it on a phone
 1. Put the phone on the same Wi-Fi as the laptop.
