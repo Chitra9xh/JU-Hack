@@ -15,3 +15,7 @@ Open `https://localhost:6969` on your laptop. The dev server uses a self-signed 
 2. Find the laptop's IP (`hostname -I` on Linux, `ipconfig` on Windows).
 3. Open `https://<laptop-ip>:6969` in Android Chrome and accept the certificate warning.
 4. If it doesn't load, allow port 6969 through the laptop's firewall.
+
+
+To view tryon update by Aryan: 
+`https://localhost:6969/src/features/tryon/engine/dev.html`
