@@ -1,1 +1,62 @@
-[]
+[
+  {
+    "id": "item-01",
+    "name": "Mango Velvet Chair",
+    "category": "furniture",
+    "model": "/assets/furniture/item-01.glb",
+    "thumb": "/assets/thumbs/item-01.png",
+    "size": {
+      "w": 0.827,
+      "h": 0.686,
+      "d": 0.57
+    }
+  },
+  {
+    "id": "item-02",
+    "name": "Navy Velvet Sofa",
+    "category": "furniture",
+    "model": "/assets/furniture/item-02.glb",
+    "thumb": "/assets/thumbs/item-02.png",
+    "size": {
+      "w": 2.188,
+      "h": 0.788,
+      "d": 1.023
+    }
+  },
+  {
+    "id": "item-03",
+    "name": "Silk Pouf",
+    "category": "furniture",
+    "model": "/assets/furniture/item-03.glb",
+    "thumb": "/assets/thumbs/item-03.png",
+    "size": {
+      "w": 0.61,
+      "h": 0.198,
+      "d": 0.61
+    }
+  },
+  {
+    "id": "item-04",
+    "name": "Glass Vase with Flowers",
+    "category": "decor",
+    "model": "/assets/furniture/item-04.glb",
+    "thumb": "/assets/thumbs/item-04.png",
+    "size": {
+      "w": 0.097,
+      "h": 0.203,
+      "d": 0.142
+    }
+  },
+  {
+    "id": "item-05",
+    "name": "Stained Glass Lamp",
+    "category": "decor",
+    "model": "/assets/furniture/item-05.glb",
+    "thumb": "/assets/thumbs/item-05.png",
+    "size": {
+      "w": 0.44,
+      "h": 0.689,
+      "d": 0.44
+    }
+  }
+]
