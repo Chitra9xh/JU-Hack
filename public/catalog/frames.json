@@ -1,1 +1,32 @@
-[]
+[
+  {
+    "id": "frame-01",
+    "name": "Pilot Sunglasses",
+    "model": "/assets/frames/frame-01.glb",
+    "thumb": "/assets/thumbs/frame-01.png"
+  },
+  {
+    "id": "frame-02",
+    "name": "Round Wire",
+    "model": "/assets/frames/frame-02.glb",
+    "thumb": "/assets/thumbs/frame-02.png"
+  },
+  {
+    "id": "frame-03",
+    "name": "Bold Square",
+    "model": "/assets/frames/frame-03.glb",
+    "thumb": "/assets/thumbs/frame-03.png"
+  },
+  {
+    "id": "frame-04",
+    "name": "Cat-Eye",
+    "model": "/assets/frames/frame-04.glb",
+    "thumb": "/assets/thumbs/frame-04.png"
+  },
+  {
+    "id": "frame-05",
+    "name": "Slim Rectangle",
+    "model": "/assets/frames/frame-05.glb",
+    "thumb": "/assets/thumbs/frame-05.png"
+  }
+]
