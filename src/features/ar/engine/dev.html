@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>AR Engine Dev Harness | Issue #7</title>
+    <style>
+      * { box-sizing: border-box; }
+      html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; }
+      body { font-family: system-ui, sans-serif; color: #fff; background: #111827; }
+      #ar-host { position: fixed; inset: 0; }
+      #overlay { position: fixed; inset: 0; pointer-events: none; }
+      .toolbar {
+        position: absolute;
+        left: 16px;
+        right: 16px;
+        bottom: max(16px, env(safe-area-inset-bottom));
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        pointer-events: auto;
+      }
+      button {
+        min-height: 44px;
+        padding: 0 18px;
+        border: 0;
+        border-radius: 8px;
+        color: #111827;
+        background: #38bdf8;
+        font-weight: 700;
+      }
+      button.secondary { color: #fff; background: #334155; }
+      button:disabled { opacity: 0.5; }
+      #status {
+        margin-left: auto;
+        padding: 8px 10px;
+        border-radius: 6px;
+        background: rgba(15, 23, 42, 0.8);
+        font-size: 13px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="ar-host"></div>
+    <div id="overlay">
+      <div class="toolbar">
+        <button id="start">Start AR</button>
+        <button id="stop" class="secondary" disabled>Stop</button>
+        <span id="status">Not started</span>
+      </div>
+    </div>
+    <script type="module" src="/src/features/ar/engine/dev.ts"></script>
+  </body>
+</html>
