@@ -1,0 +1,494 @@
+/* ── REALITY LAB CLEAN HOME STYLING ───────────────────────────────────────── */
+
+.reality-home {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 48px 24px 64px;
+}
+
+/* ── HERO SECTION ────────────────────────────────────────────────────────── */
+
+.reality-hero-section {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  align-items: center;
+  gap: 48px;
+  padding-bottom: 56px;
+  border-bottom: 1px solid #232c23;
+}
+
+.reality-hero-content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 18px;
+}
+
+.reality-section-tag {
+  color: #d5fa9c;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.reality-hero-title {
+  margin: 0;
+  font-size: clamp(2.4rem, 5vw, 3.8rem);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.04em;
+  color: #f4f4ee;
+}
+
+.reality-hero-desc {
+  margin: 0;
+  max-width: 520px;
+  font-size: 16px;
+  line-height: 1.65;
+  color: #bac4b7;
+}
+
+/* Hero CTAs */
+.reality-hero-ctas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.reality-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  padding: 12px 22px;
+  border-radius: 999px;
+  background: #d5fa9c;
+  color: #111512;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: background-color 0.15s ease, transform 0.15s ease;
+}
+
+.reality-btn-primary:hover {
+  background: #e3ffb2;
+  transform: translateY(-1px);
+}
+
+.reality-btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  padding: 12px 20px;
+  border-radius: 999px;
+  background: #1d251e;
+  border: 1px solid #3c493a;
+  color: #f4f4ee;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.15s ease;
+}
+
+.reality-btn-secondary:hover {
+  border-color: #d5fa9c;
+  color: #d5fa9c;
+  transform: translateY(-1px);
+}
+
+.reality-tech-note {
+  font-size: 12px;
+  color: #7b8878;
+  margin-top: 4px;
+}
+
+/* ── 3D MODEL PREVIEW CARD ───────────────────────────────────────────────── */
+
+.reality-showcase-container {
+  width: 100%;
+}
+
+.reality-showcase-card {
+  background: #171d17;
+  border: 1px solid #303b2f;
+  border-radius: 18px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.reality-showcase-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  border-bottom: 1px solid #283327;
+  background: #141a14;
+}
+
+.showcase-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #aebaaa;
+  letter-spacing: 0.04em;
+}
+
+.reality-showcase-tabs {
+  display: flex;
+  gap: 6px;
+}
+
+.showcase-tab {
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  border: 1px solid #3c493a;
+  background: #1f271f;
+  color: #aebaaa;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.showcase-tab:hover {
+  color: #f4f4ee;
+}
+
+.showcase-tab.active {
+  background: #d5fa9c;
+  border-color: #d5fa9c;
+  color: #111512;
+}
+
+.reality-canvas-viewport {
+  position: relative;
+  width: 100%;
+  height: 310px;
+  background: #111512;
+  cursor: grab;
+  touch-action: none;
+}
+
+.reality-canvas-viewport:active {
+  cursor: grabbing;
+}
+
+.reality-canvas-3d {
+  width: 100%;
+  height: 100%;
+  display: block;
+  touch-action: none;
+}
+
+.reality-canvas-loader {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: rgba(17, 21, 18, 0.8);
+  color: #aebaaa;
+  font-size: 12px;
+}
+
+.reality-mini-spinner {
+  width: 24px;
+  height: 24px;
+  border: 2px solid rgba(213, 250, 156, 0.2);
+  border-top-color: #d5fa9c;
+  border-radius: 50%;
+  animation: realitySpin 0.7s linear infinite;
+}
+
+@keyframes realitySpin {
+  to { transform: rotate(360deg); }
+}
+
+.reality-canvas-hint {
+  position: absolute;
+  bottom: 10px;
+  left: 12px;
+  right: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 11px;
+  color: #7b8878;
+  pointer-events: none;
+}
+
+.reality-rotate-toggle {
+  pointer-events: auto;
+  padding: 4px 10px;
+  border-radius: 6px;
+  background: #1d251e;
+  border: 1px solid #3c493a;
+  color: #bac4b7;
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.reality-rotate-toggle:hover {
+  color: #f4f4ee;
+  border-color: #556653;
+}
+
+.reality-showcase-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  border-top: 1px solid #283327;
+  background: #141a14;
+}
+
+.showcase-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.showcase-info strong {
+  font-size: 13px;
+  color: #f4f4ee;
+}
+
+.showcase-info span {
+  font-size: 11px;
+  color: #aebaaa;
+}
+
+.showcase-quick-link {
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: #1d251e;
+  border: 1px solid #3c493a;
+  color: #d5fa9c;
+  font-size: 12px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.15s ease;
+}
+
+.showcase-quick-link:hover {
+  background: #d5fa9c;
+  color: #111512;
+}
+
+/* ── EXPERIENCES GRID ─────────────────────────────────────────────────────── */
+
+.reality-experiences-section {
+  padding-top: 48px;
+}
+
+.reality-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+}
+
+.reality-exp-card {
+  background: #1d251e;
+  border: 1px solid #3c493a;
+  border-radius: 18px;
+  padding: 28px;
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+  transition: border-color 0.15s ease, transform 0.15s ease;
+}
+
+.reality-exp-card:hover {
+  border-color: #d5fa9c;
+  transform: translateY(-2px);
+}
+
+.exp-card-header {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.exp-card-badge {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: #aebaaa;
+  text-transform: uppercase;
+}
+
+.exp-card-header h3 {
+  margin: 0;
+  font-size: 1.5rem;
+  letter-spacing: -0.02em;
+  color: #f4f4ee;
+}
+
+.exp-card-visual {
+  height: 150px;
+  width: 100%;
+  border-radius: 12px;
+  background: #141a14;
+  border: 1px solid #283327;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.exp-visual-img {
+  max-height: 110px;
+  max-width: 80%;
+  object-fit: contain;
+}
+
+.exp-card-text {
+  margin: 0 0 16px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #bac4b7;
+}
+
+.exp-card-list {
+  margin: 0 0 24px;
+  padding-left: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.exp-card-list li {
+  font-size: 13px;
+  color: #aebaaa;
+  line-height: 1.5;
+}
+
+.exp-card-cta {
+  display: inline-flex;
+  align-items: center;
+  padding: 10px 18px;
+  color: #111512;
+  background: #d5fa9c;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 700;
+  margin-top: auto;
+  align-self: flex-start;
+  transition: background-color 0.15s ease;
+}
+
+.reality-exp-card:hover .exp-card-cta {
+  background: #e3ffb2;
+}
+
+/* ── FOOTER ──────────────────────────────────────────────────────────────── */
+
+.reality-footer {
+  margin-top: 56px;
+  padding-top: 24px;
+  border-top: 1px solid #232c23;
+}
+
+.reality-footer-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.reality-footer-brand {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.reality-footer-brand strong {
+  font-size: 13px;
+  color: #f4f4ee;
+}
+
+.reality-footer-brand span {
+  font-size: 12px;
+  color: #7b8878;
+}
+
+.reality-footer-links {
+  display: flex;
+  gap: 18px;
+}
+
+.reality-footer-links a {
+  color: #aebaaa;
+  font-size: 13px;
+  text-decoration: none;
+}
+
+.reality-footer-links a:hover {
+  color: #d5fa9c;
+}
+
+/* ── FOCUS STATES & REDUCED MOTION ───────────────────────────────────────── */
+
+.reality-btn-primary:focus-visible,
+.reality-btn-secondary:focus-visible,
+.showcase-tab:focus-visible,
+.reality-rotate-toggle:focus-visible,
+.showcase-quick-link:focus-visible,
+.reality-exp-card:focus-visible {
+  outline: 2px solid #d5fa9c;
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reality-btn-primary:hover,
+  .reality-btn-secondary:hover,
+  .reality-exp-card:hover {
+    transform: none;
+  }
+}
+
+/* ── RESPONSIVE ──────────────────────────────────────────────────────────── */
+
+@media (max-width: 860px) {
+  .reality-hero-section {
+    grid-template-columns: 1fr;
+    gap: 36px;
+  }
+
+  .reality-cards-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 500px) {
+  .reality-home {
+    padding: 32px 16px 48px;
+  }
+
+  .reality-hero-title {
+    font-size: 2.1rem;
+  }
+
+  .reality-hero-ctas {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .reality-btn-primary,
+  .reality-btn-secondary {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .reality-canvas-viewport {
+    height: 260px;
+  }
+
+  .reality-exp-card {
+    padding: 20px;
+  }
+}

@@ -2,6 +2,7 @@ import { lazy, Suspense } from 'react';
 import { BrowserRouter, Link, NavLink, Route, Routes } from 'react-router-dom';
 import './shell.css';
 
+const HomeView = lazy(() => import('../features/home/HomeView'));
 const TryOnView = lazy(() => import('../features/tryon/ui/TryOnView'));
 const ArView = lazy(() => import('../features/ar/ui/ArView'));
 
@@ -9,49 +10,17 @@ function PageLoader() {
   return (
     <div className="shell-loader-container">
       <div className="shell-loader-spinner" />
-      <p>Loading 3D experience...</p>
+      <p>Initializing Spatial Experience...</p>
     </div>
-  );
-}
-
-function Home() {
-  return (
-    <main className="shell-home">
-      <p className="shell-eyebrow">JU-Hack · Virtual experiences</p>
-      <h1>Try something new.<br />See it in your world.</h1>
-      <p className="shell-description">
-        Explore glasses on your face or preview furniture in your room with real-time spatial computing.
-      </p>
-
-      <div className="shell-options">
-        <Link className="shell-card" to="/tryon">
-          <span className="shell-card-label">01 · Virtual Try-On</span>
-          <h2>Find your frame</h2>
-          <p>Try 5 realistic glasses styles live using your camera and face tracking.</p>
-          <span className="shell-card-action">Open Try-On →</span>
-        </Link>
-
-        <Link className="shell-card" to="/ar">
-          <span className="shell-card-label">02 · AR Placement</span>
-          <h2>Make room for ideas</h2>
-          <p>Inspect 3D furniture models or place them at true 1:1 scale in your living space.</p>
-          <span className="shell-card-action">Open AR Placement →</span>
-        </Link>
-      </div>
-
-      <p className="shell-note">
-        💡 Virtual Try-On works seamlessly on laptop webcams and phone browsers.
-        AR Placement includes an interactive 3D studio on all devices, plus immersive WebXR AR on compatible Android devices.
-      </p>
-    </main>
   );
 }
 
 function NotFound() {
   return (
-    <main className="shell-home">
-      <h1>Page not found</h1>
-      <Link className="shell-home-link" to="/">Return home →</Link>
+    <main className="reality-home" style={{ textAlign: 'center', padding: '100px 20px' }}>
+      <h1 style={{ fontSize: '3rem', margin: '0 0 16px' }}>404 · Page Not Found</h1>
+      <p style={{ color: '#94a3b8', marginBottom: '24px' }}>The spatial coordinate you requested does not exist.</p>
+      <Link className="reality-btn-primary" to="/" style={{ display: 'inline-flex' }}>Return to Reality Lab →</Link>
     </main>
   );
 }
@@ -89,7 +58,7 @@ export default function App() {
 
         <Suspense fallback={<PageLoader />}>
           <Routes>
-            <Route path="/" element={<Home />} />
+            <Route path="/" element={<HomeView />} />
             <Route path="/tryon" element={<TryOnView />} />
             <Route path="/ar" element={<ArView />} />
             <Route path="*" element={<NotFound />} />
