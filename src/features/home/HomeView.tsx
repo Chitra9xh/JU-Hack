@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import './home.css';
+import Collections from './Collections';
 
 type ShowcaseModel = 'glasses' | 'chair';
 
@@ -225,28 +226,28 @@ export default function HomeView() {
       {/* ── HERO ────────────────────────────────────────────────────────────── */}
       <section className="reality-hero-section">
         <div className="reality-hero-content">
-          <span className="reality-section-tag">JU-Hack · 3D Web Vision</span>
+          <span className="reality-section-tag">A NEW WAY TO DISCOVER</span>
 
           <h1 className="reality-hero-title">
-            Real-time Virtual Try-On <br />
-            and Room AR.
+            See yourself.<br />
+            <em>See the possibilities.</em>
           </h1>
 
           <p className="reality-hero-desc">
-            Try glasses fitted to your face using your webcam, or place true-scale furniture in your room with your phone camera. Runs 100% in your browser.
+            Frames that feel like you. Pieces that feel like home. Explore them in your world, before you decide.
           </p>
 
           <div className="reality-hero-ctas">
             <Link to="/tryon" className="reality-btn-primary">
-              Launch Virtual Try-On →
+              Find your frame ↗
             </Link>
             <Link to="/ar" className="reality-btn-secondary">
-              Open AR Studio ↗
+              Explore your space ↗
             </Link>
           </div>
 
           <div className="reality-tech-note">
-            <span>Powered by Three.js WebGL & MediaPipe FaceMesh · No app install needed</span>
+            <span>YOUR CAMERA. YOUR WORLD. NO APP NEEDED.</span>
           </div>
         </div>
 
@@ -254,7 +255,7 @@ export default function HomeView() {
         <div className="reality-showcase-container">
           <div className="reality-showcase-card">
             <div className="reality-showcase-header">
-              <span className="showcase-label">Interactive 3D Preview</span>
+              <span className="showcase-label">THE INTERACTIVE EDIT</span>
               <div className="reality-showcase-tabs" role="tablist">
                 <button
                   className={`showcase-tab ${activeModel === 'glasses' ? 'active' : ''}`}
@@ -316,14 +317,15 @@ export default function HomeView() {
         </div>
       </section>
 
+      <Collections />
       {/* ── EXPERIENCES GRID ─────────────────────────────────────────────────── */}
-      <section className="reality-experiences-section" aria-label="Available experiences">
+      <section className="reality-experiences-section" aria-label="Available experiences"><div className="edit-section-heading"><div><span className="shell-eyebrow">BEYOND THE SCREEN</span><h2>A little closer to real.</h2></div><p>Two ways to make it yours.<br />One seamless browser experience.</p></div>
         <div className="reality-cards-grid">
           {/* Card 1: Virtual Try-On */}
           <Link to="/tryon" className="reality-exp-card">
             <div className="exp-card-header">
-              <span className="exp-card-badge">01 · Web Vision</span>
-              <h3>Virtual Try-On</h3>
+              <span className="exp-card-badge">01 / MADE FOR YOUR FACE</span>
+              <h3>Your next look, live.</h3>
             </div>
 
             <div className="exp-card-visual">
@@ -353,8 +355,8 @@ export default function HomeView() {
           {/* Card 2: AR Placement */}
           <Link to="/ar" className="reality-exp-card">
             <div className="exp-card-header">
-              <span className="exp-card-badge">02 · Spatial AR</span>
-              <h3>Room AR & 3D Studio</h3>
+              <span className="exp-card-badge">02 / MADE FOR YOUR SPACE</span>
+              <h3>Bring your space to life.</h3>
             </div>
 
             <div className="exp-card-visual">
@@ -383,22 +385,6 @@ export default function HomeView() {
         </div>
       </section>
 
-      {/* ── FOOTER ───────────────────────────────────────────────────────────── */}
-      <footer className="reality-footer">
-        <div className="reality-footer-inner">
-          <div className="reality-footer-brand">
-            <strong>JU-Hack Reality Lab</strong>
-            <span>WebGL, MediaPipe, and Three.js spatial computing.</span>
-          </div>
-          <div className="reality-footer-links">
-            <Link to="/tryon">Try-On</Link>
-            <Link to="/ar">AR Studio</Link>
-            <a href="https://github.com/Chitra9xh/JU-Hack" target="_blank" rel="noreferrer">
-              GitHub ↗
-            </a>
-          </div>
-        </div>
-      </footer>
     </main>
   );
 }

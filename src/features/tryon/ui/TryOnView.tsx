@@ -403,7 +403,7 @@ export default function TryOnView() {
             <h3>Frame Collection</h3>
             <span>5 styles · click to switch while live</span>
           </div>
-          {selectedFrame && <span style={{ color: '#d5fa9c', fontWeight: 600 }}>Current: {selectedFrame.name}</span>}
+          {selectedFrame && <span style={{ color: 'var(--teal)', fontWeight: 600 }}>Current: {selectedFrame.name}</span>}
         </div>
         <div className="tryon-frames-grid">
           {frames.map((frame) => {

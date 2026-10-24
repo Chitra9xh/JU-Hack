@@ -1211,7 +1211,7 @@ export default function ArView() {
         <div className="ar-catalog-header">
           <div>
             <h3>Furniture & Decor Catalog</h3>
-            <span style={{ fontSize: '13px', color: '#aebaaa' }}>
+            <span style={{ fontSize: '13px', color: 'var(--muted)' }}>
               Select an item to inspect in 3D and place in your room
             </span>
           </div>
