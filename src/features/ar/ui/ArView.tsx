@@ -1029,14 +1029,15 @@ export default function ArView() {
               className="btn-primary-action"
               onClick={() => startCameraRoomAr()}
               disabled={isLoadingModel}
+              title="Recommended smooth 60 FPS mobile room AR with touch gestures"
             >
-              📷 Launch Live Room AR
+              📷 Launch Live Room AR <span style={{ fontSize: '11px', opacity: 0.85, fontWeight: 500 }}>(Smooth 60 FPS)</span>
             </button>
             {isArSupported && (
               <button
                 className="btn-secondary-action"
                 onClick={handleStartWebXr}
-                title="Launch WebXR immersive session"
+                title="Launch WebXR immersive session (Optimized for ARCore)"
               >
                 📱 Native WebXR
               </button>
@@ -1291,16 +1292,48 @@ export default function ArView() {
         <div ref={arOverlayRef} className="ar-native-overlay">
           <div className="ar-overlay-top">
             <span>AR Mode: Tap ring to place {selectedItem?.name}</span>
-            <button
-              className="btn-danger-action"
-              onClick={handleStopWebXr}
-              style={{ padding: '6px 14px', fontSize: '12px' }}
-            >
-              ✕ Exit AR
-            </button>
+            <div style={{ display: 'flex', gap: '8px' }}>
+              <button
+                className="btn-secondary-action"
+                onClick={() => {
+                  handleStopWebXr();
+                  startCameraRoomAr();
+                  showToast('Switched to ultra-smooth Camera AR');
+                }}
+                style={{
+                  padding: '6px 12px',
+                  fontSize: '12px',
+                  background: 'rgba(56, 189, 248, 0.25)',
+                  borderColor: '#38bdf8',
+                  color: '#38bdf8',
+                }}
+                title="Switch to ultra-fast 60 FPS Camera AR"
+              >
+                ⚡ Fast Room AR
+              </button>
+              <button
+                className="btn-danger-action"
+                onClick={handleStopWebXr}
+                style={{ padding: '6px 14px', fontSize: '12px' }}
+              >
+                ✕ Exit AR
+              </button>
+            </div>
           </div>
 
           <div className="ar-overlay-bottom">
+            <div
+              style={{
+                background: 'rgba(0, 0, 0, 0.65)',
+                padding: '4px 14px',
+                borderRadius: '12px',
+                fontSize: '11px',
+                color: '#cbd5e1',
+                backdropFilter: 'blur(8px)',
+              }}
+            >
+              💡 If WebXR feels laggy on your phone, tap &ldquo;⚡ Fast Room AR&rdquo; above for butter-smooth 60 FPS
+            </div>
             <div className="ar-overlay-actions">
               <button
                 className="btn-secondary-action"
