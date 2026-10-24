@@ -678,31 +678,202 @@
   to { opacity: 1; transform: translate(-50%, 0); }
 }
 
+/* Fullscreen Mobile Mode */
+.ar-camera-stage.fullscreen {
+  position: fixed !important;
+  inset: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  height: 100dvh !important;
+  max-height: none !important;
+  border-radius: 0 !important;
+  border: none !important;
+  z-index: 99999 !important;
+  margin: 0 !important;
+}
+
+.ar-camera-stage.fullscreen .ar-room-hud-top {
+  top: max(16px, env(safe-area-inset-top));
+  left: max(16px, env(safe-area-inset-left));
+  right: max(16px, env(safe-area-inset-right));
+}
+
+.ar-camera-stage.fullscreen .ar-room-toolbar {
+  bottom: max(18px, env(safe-area-inset-bottom));
+}
+
+/* Touch Action on 3D Canvas */
+.ar-camera-3d-canvas {
+  touch-action: none;
+  -webkit-touch-callout: none;
+  user-select: none;
+}
+
+/* Gesture Hint Pill for Mobile */
+.ar-gesture-hint {
+  pointer-events: none;
+  background: rgba(17, 21, 18, 0.85);
+  border: 1px solid rgba(213, 250, 156, 0.3);
+  color: #d5fa9c;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: 999px;
+  backdrop-filter: blur(12px);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  position: absolute;
+  top: 68px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  white-space: nowrap;
+  animation: pulseHint 3s ease infinite;
+}
+
+@keyframes pulseHint {
+  0%, 100% { opacity: 0.9; }
+  50% { opacity: 0.55; }
+}
+
 @media (max-width: 768px) {
+  .ar-container {
+    padding: 16px 12px 36px;
+    gap: 16px;
+  }
+
+  .ar-top-bar {
+    gap: 12px;
+  }
+
+  .ar-title-group h1 {
+    font-size: 1.5rem;
+  }
+
+  .ar-view-mode-tabs {
+    width: 100%;
+  }
+
+  .ar-view-mode-tab {
+    flex: 1;
+    justify-content: center;
+    padding: 10px 12px;
+    font-size: 13px;
+    min-height: 44px;
+  }
+
   .ar-stage-card, .ar-camera-stage {
-    aspect-ratio: 4 / 3;
-    min-height: 320px;
+    aspect-ratio: 4 / 5;
+    min-height: 420px;
+    border-radius: 18px;
   }
 
   .ar-studio-hud {
     flex-direction: column;
-    gap: 8px;
+    gap: 10px;
+    top: 12px;
+    left: 12px;
+    right: 12px;
+  }
+
+  .ar-item-details-pill {
+    padding: 8px 12px;
+    width: 100%;
+  }
+
+  .ar-studio-controls {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding-bottom: 4px;
+    flex-wrap: nowrap;
+  }
+
+  .ar-studio-controls::-webkit-scrollbar {
+    display: none;
+  }
+
+  .ar-ctrl-btn {
+    white-space: nowrap;
+    padding: 8px 14px;
+    min-height: 42px;
+    font-size: 13px;
   }
 
   .ar-swatches-card {
     position: static;
-    margin-top: 8px;
+    margin-top: 10px;
+    justify-content: space-between;
+    width: 100%;
+    border-radius: 14px;
+  }
+
+  .ar-swatch-btn {
+    width: 28px;
+    height: 28px;
+  }
+
+  .ar-stage-launch-bar {
+    width: calc(100% - 24px);
+    bottom: 12px;
     justify-content: center;
+    padding: 6px 12px;
+  }
+
+  .ar-stage-launch-bar button {
+    flex: 1;
+    min-height: 46px;
+    font-size: 14px;
+  }
+
+  .ar-room-hud-top {
+    top: 12px;
+    left: 12px;
+    right: 12px;
+  }
+
+  .ar-room-instructions {
+    font-size: 12px;
+    padding: 6px 12px;
+    max-width: 65%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .ar-room-top-actions button {
+    min-height: 40px;
+    padding: 6px 12px;
+  }
+
+  .ar-room-toolbar {
+    max-width: calc(100% - 20px);
+    bottom: 12px;
+    padding: 8px;
+    gap: 6px;
+    border-radius: 16px;
+  }
+
+  .ar-tool-btn {
+    min-height: 44px;
+    padding: 6px 10px;
+    font-size: 12px;
   }
 
   .ar-furniture-grid {
     grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
   }
 
-  .ar-room-toolbar {
-    max-width: 95%;
-    padding: 6px 10px;
-    gap: 6px;
+  .ar-furniture-card {
+    padding: 10px;
+  }
+
+  .ar-card-name {
+    font-size: 13px;
   }
 }
+
 

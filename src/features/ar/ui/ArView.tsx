@@ -44,6 +44,8 @@ export default function ArView() {
   const [roomScanPhase, setRoomScanPhase] = useState<'scanning' | 'locked'>('scanning');
   const [placedItems, setPlacedItems] = useState<PlacedRoomItem[]>([]);
   const [selectedPlacedId, setSelectedPlacedId] = useState<string | null>(null);
+  const [cameraFacing, setCameraFacing] = useState<'environment' | 'user'>('environment');
+  const [isFullscreenAr, setIsFullscreenAr] = useState(false);
 
   // WebXR support state
   const [isArSupported, setIsArSupported] = useState<boolean | null>(null);
@@ -75,6 +77,29 @@ export default function ArView() {
   const cameraRaycasterRef = useRef<THREE.Raycaster>(new THREE.Raycaster());
   const cameraPointerRef = useRef<THREE.Vector2>(new THREE.Vector2());
   const cameraAnimFrameRef = useRef<number | null>(null);
+
+  // Multi-Touch & Gesture state ref
+  const touchStateRef = useRef<{
+    isDragging: boolean;
+    hasMoved: boolean;
+    startClientX: number;
+    startClientY: number;
+    draggedId: string | null;
+    initialDistance: number;
+    initialScale: number;
+    initialAngle: number;
+    initialRotY: number;
+  }>({
+    isDragging: false,
+    hasMoved: false,
+    startClientX: 0,
+    startClientY: 0,
+    draggedId: null,
+    initialDistance: 0,
+    initialScale: 1.0,
+    initialAngle: 0,
+    initialRotY: 0,
+  });
 
   // Native WebXR AR Engine Refs
   const arEngineRef = useRef<ArEngineExtended | null>(null);
@@ -246,7 +271,6 @@ export default function ArView() {
     const scene = studioSceneRef.current;
     const loader = new GLTFLoader();
 
-    // Inform WebXR engine of current model
     if (arEngineRef.current) {
       void arEngineRef.current.setModel(selectedItem);
     }
@@ -254,7 +278,6 @@ export default function ArView() {
     const processModel = (rawModel: THREE.Group) => {
       if (!active) return;
 
-      // Remove previous model & visual helpers
       if (currentModelGroupRef.current) {
         scene.remove(currentModelGroupRef.current);
         currentModelGroupRef.current = null;
@@ -276,7 +299,6 @@ export default function ArView() {
         }
       });
 
-      // Ground model so base is at y = 0
       const bbox = new THREE.Box3().setFromObject(model);
       const center = bbox.getCenter(new THREE.Vector3());
       model.position.x = -center.x;
@@ -288,13 +310,11 @@ export default function ArView() {
       scene.add(group);
       currentModelGroupRef.current = group;
 
-      // Apply chosen upholstery color
       const finish = UPHOLSTERY_FINISHES.find((f) => f.id === activeFinish);
       if (finish) {
         applyUpholsteryColor(group, finish.hex);
       }
 
-      // Add Human Silhouette if toggled
       if (showHumanScale) {
         const sil = createHumanSilhouette();
         sil.position.set(bbox.max.x + 0.35, 0, 0);
@@ -302,7 +322,6 @@ export default function ArView() {
         humanSilhouetteRef.current = sil;
       }
 
-      // Add Dimension Box if toggled
       if (showDimensions) {
         const { w, h, d } = selectedItem.size;
         const dBox = createDimensionBox(w, h, d);
@@ -310,7 +329,6 @@ export default function ArView() {
         dimensionBoxRef.current = dBox;
       }
 
-      // Focus camera on model center
       if (studioControlsRef.current) {
         studioControlsRef.current.target.set(0, selectedItem.size.h * 0.45, 0);
         studioControlsRef.current.update();
@@ -352,17 +370,22 @@ export default function ArView() {
     };
   }, [selectedItem, viewMode, showHumanScale, showDimensions, activeFinish]);
 
-  // 4. Live Camera Room AR Engine Setup
-  const startCameraRoomAr = async () => {
+  // 4. Live Camera Room AR Engine Setup with Mobile Support
+  const startCameraRoomAr = async (facing: 'environment' | 'user' = cameraFacing) => {
     setViewMode('camera-ar');
     setIsCameraStarting(true);
     setRoomScanPhase('scanning');
     setErrorMessage(null);
 
+    if (cameraStreamRef.current) {
+      cameraStreamRef.current.getTracks().forEach((track) => track.stop());
+      cameraStreamRef.current = null;
+    }
+
     try {
       const stream = await navigator.mediaDevices.getUserMedia({
         video: {
-          facingMode: { ideal: 'environment' },
+          facingMode: { ideal: facing },
           width: { ideal: 1920 },
           height: { ideal: 1080 },
         },
@@ -377,18 +400,24 @@ export default function ArView() {
       initCamera3DScene();
       setIsCameraStarting(false);
 
-      // Radar scanning effect unlocks after 1.4s
       setTimeout(() => {
         setRoomScanPhase('locked');
-        showToast('🎯 Floor locked! Click or tap to place furniture');
-      }, 1400);
+        showToast('🎯 Floor locked! Tap floor to place, drag to move, pinch to scale');
+      }, 1200);
     } catch (err: unknown) {
       console.error('Camera AR access failed:', err);
       setIsCameraStarting(false);
       setViewMode('studio');
       const msg = err instanceof Error ? err.message : 'Camera error';
-      setErrorMessage(`Camera access denied: ${msg}. You can continue inspecting in 3D Studio mode.`);
+      setErrorMessage(`Camera error: ${msg}. Returning to 3D Studio mode.`);
     }
+  };
+
+  const toggleCameraFacing = async () => {
+    const nextFacing = cameraFacing === 'environment' ? 'user' : 'environment';
+    setCameraFacing(nextFacing);
+    await startCameraRoomAr(nextFacing);
+    showToast(`Switched to ${nextFacing === 'environment' ? 'Rear' : 'Front'} Camera`);
   };
 
   const stopCameraRoomAr = () => {
@@ -412,6 +441,7 @@ export default function ArView() {
     cameraFloorPlaneRef.current = null;
     setPlacedItems([]);
     setSelectedPlacedId(null);
+    setIsFullscreenAr(false);
     setViewMode('studio');
   };
 
@@ -422,9 +452,11 @@ export default function ArView() {
     const scene = new THREE.Scene();
     cameraSceneRef.current = scene;
 
-    // Camera elevated at 1.4m looking slightly down at floor (-25 deg)
-    const camera = new THREE.PerspectiveCamera(55, canvas.clientWidth / canvas.clientHeight, 0.1, 50);
-    camera.position.set(0, 1.4, 2.5);
+    const aspect = canvas.clientWidth / canvas.clientHeight;
+    // Adjust vertical FOV in portrait mode so models appear natural on mobile
+    const fov = aspect < 1 ? 65 : 55;
+    const camera = new THREE.PerspectiveCamera(fov, aspect, 0.1, 50);
+    camera.position.set(0, 1.4, 2.4);
     camera.lookAt(0, 0, 0);
     cameraCameraRef.current = camera;
 
@@ -441,8 +473,7 @@ export default function ArView() {
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     cameraRendererRef.current = renderer;
 
-    // Realistic Lighting for Room Passthrough
-    const ambient = new THREE.AmbientLight(0xffffff, 1.2);
+    const ambient = new THREE.AmbientLight(0xffffff, 1.25);
     const sunLight = new THREE.DirectionalLight(0xfff5ea, 1.6);
     sunLight.position.set(2, 4, 3);
     sunLight.castShadow = true;
@@ -450,8 +481,7 @@ export default function ArView() {
     sunLight.shadow.mapSize.height = 1024;
     scene.add(ambient, sunLight);
 
-    // Floor Shadow Receiver (Invisible, catches soft shadows)
-    const shadowPlaneGeo = new THREE.PlaneGeometry(12, 12);
+    const shadowPlaneGeo = new THREE.PlaneGeometry(16, 16);
     shadowPlaneGeo.rotateX(-Math.PI / 2);
     const shadowPlaneMat = new THREE.ShadowMaterial({ opacity: 0.35 });
     const shadowPlane = new THREE.Mesh(shadowPlaneGeo, shadowPlaneMat);
@@ -459,8 +489,7 @@ export default function ArView() {
     shadowPlane.receiveShadow = true;
     scene.add(shadowPlane);
 
-    // Raycast target floor
-    const floorGeo = new THREE.PlaneGeometry(20, 20);
+    const floorGeo = new THREE.PlaneGeometry(24, 24);
     floorGeo.rotateX(-Math.PI / 2);
     const floorMat = new THREE.MeshBasicMaterial({ visible: false });
     const floor = new THREE.Mesh(floorGeo, floorMat);
@@ -468,14 +497,12 @@ export default function ArView() {
     scene.add(floor);
     cameraFloorPlaneRef.current = floor;
 
-    // Floor Grid Helper (Subtle perspective guide)
     const roomGrid = new THREE.GridHelper(8, 16, 0xd5fa9c, 0x3c493a);
     (roomGrid.material as THREE.Material).transparent = true;
     (roomGrid.material as THREE.Material).opacity = 0.35;
     roomGrid.position.y = 0.002;
     scene.add(roomGrid);
 
-    // Animated Placement Reticle
     const reticleGroup = new THREE.Group();
     const ringGeo = new THREE.RingGeometry(0.18, 0.22, 32);
     ringGeo.rotateX(-Math.PI / 2);
@@ -488,7 +515,6 @@ export default function ArView() {
     const ring = new THREE.Mesh(ringGeo, ringMat);
     reticleGroup.add(ring);
 
-    // Inner pulsed dot
     const dotGeo = new THREE.CircleGeometry(0.04, 16);
     dotGeo.rotateX(-Math.PI / 2);
     const dot = new THREE.Mesh(dotGeo, new THREE.MeshBasicMaterial({ color: 0x38bdf8 }));
@@ -498,7 +524,6 @@ export default function ArView() {
     scene.add(reticleGroup);
     cameraReticleRef.current = ring;
 
-    // Render loop
     let running = true;
     const animate = () => {
       if (!running) return;
@@ -508,21 +533,23 @@ export default function ArView() {
     };
     animate();
 
-    // Canvas Resize listener
     const handleResize = () => {
       if (!canvas || !renderer) return;
       const w = canvas.clientWidth;
       const h = canvas.clientHeight;
       if (w === 0 || h === 0) return;
-      camera.aspect = w / h;
+      const nextAspect = w / h;
+      camera.aspect = nextAspect;
+      camera.fov = nextAspect < 1 ? 65 : 55;
       camera.updateProjectionMatrix();
       renderer.setSize(w, h, false);
     };
     window.addEventListener('resize', handleResize);
   };
 
-  // Pointer move on Camera AR canvas: updates reticle position
+  // Pointer move (Mouse or single hover)
   const handleCameraPointerMove = (e: React.PointerEvent<HTMLCanvasElement>) => {
+    if (e.pointerType === 'touch') return; // Handled by touch events
     const canvas = cameraCanvasRef.current;
     const camera = cameraCameraRef.current;
     const floor = cameraFloorPlaneRef.current;
@@ -549,7 +576,6 @@ export default function ArView() {
 
     const spawnPos = reticle.parent?.position.clone() || new THREE.Vector3(0, 0, 0);
 
-    // Get cached model or fallback
     let modelInstance: THREE.Group;
     const cached = gltfCacheRef.current.get(selectedItem.model);
     if (cached) {
@@ -591,7 +617,152 @@ export default function ArView() {
 
     setPlacedItems((prev) => [...prev, newPlacedItem]);
     setSelectedPlacedId(newItemId);
-    showToast(`Placed ${selectedItem.name} in room!`);
+    if (navigator.vibrate) navigator.vibrate(20);
+    showToast(`Placed ${selectedItem.name}! Drag to move, pinch to resize`);
+  };
+
+  // ── Touch Gesture Engine for Mobile (Drag, Pinch Scale, Twist Rotate) ────
+  const handleTouchStart = (e: React.TouchEvent<HTMLCanvasElement>) => {
+    const canvas = cameraCanvasRef.current;
+    const camera = cameraCameraRef.current;
+    if (!canvas || !camera) return;
+
+    if (e.touches.length === 1) {
+      const touch = e.touches[0];
+      const rect = canvas.getBoundingClientRect();
+      const pointer = new THREE.Vector2(
+        ((touch.clientX - rect.left) / rect.width) * 2 - 1,
+        -((touch.clientY - rect.top) / rect.height) * 2 + 1
+      );
+
+      cameraRaycasterRef.current.setFromCamera(pointer, camera);
+
+      // Check if user touched an already placed item
+      const candidateObjects = placedItems.map((pi) => pi.object);
+      const hits = cameraRaycasterRef.current.intersectObjects(candidateObjects, true);
+
+      if (hits.length > 0) {
+        let topParent: THREE.Object3D | null = hits[0].object;
+        while (topParent && !candidateObjects.includes(topParent as THREE.Group)) {
+          topParent = topParent.parent;
+        }
+        const found = placedItems.find((pi) => pi.object === topParent);
+        if (found) {
+          setSelectedPlacedId(found.id);
+          touchStateRef.current = {
+            isDragging: true,
+            hasMoved: false,
+            startClientX: touch.clientX,
+            startClientY: touch.clientY,
+            draggedId: found.id,
+            initialDistance: 0,
+            initialScale: found.scale,
+            initialAngle: 0,
+            initialRotY: found.rotationY,
+          };
+          if (navigator.vibrate) navigator.vibrate(12);
+          return;
+        }
+      }
+
+      touchStateRef.current = {
+        isDragging: false,
+        hasMoved: false,
+        startClientX: touch.clientX,
+        startClientY: touch.clientY,
+        draggedId: null,
+        initialDistance: 0,
+        initialScale: 1.0,
+        initialAngle: 0,
+        initialRotY: 0,
+      };
+    } else if (e.touches.length === 2 && selectedPlacedId) {
+      const t1 = e.touches[0];
+      const t2 = e.touches[1];
+      const dist = Math.hypot(t2.clientX - t1.clientX, t2.clientY - t1.clientY);
+      const angle = Math.atan2(t2.clientY - t1.clientY, t2.clientX - t1.clientX);
+
+      const active = placedItems.find((pi) => pi.id === selectedPlacedId);
+      touchStateRef.current = {
+        isDragging: false,
+        hasMoved: true,
+        startClientX: 0,
+        startClientY: 0,
+        draggedId: selectedPlacedId,
+        initialDistance: dist,
+        initialScale: active?.scale || 1.0,
+        initialAngle: angle,
+        initialRotY: active?.rotationY || 0,
+      };
+    }
+  };
+
+  const handleTouchMove = (e: React.TouchEvent<HTMLCanvasElement>) => {
+    const canvas = cameraCanvasRef.current;
+    const camera = cameraCameraRef.current;
+    const floor = cameraFloorPlaneRef.current;
+    if (!canvas || !camera || !floor) return;
+
+    if (e.touches.length === 1) {
+      const touch = e.touches[0];
+      const dist = Math.hypot(
+        touch.clientX - touchStateRef.current.startClientX,
+        touch.clientY - touchStateRef.current.startClientY
+      );
+      if (dist > 7) {
+        touchStateRef.current.hasMoved = true;
+      }
+
+      const rect = canvas.getBoundingClientRect();
+      const pointer = new THREE.Vector2(
+        ((touch.clientX - rect.left) / rect.width) * 2 - 1,
+        -((touch.clientY - rect.top) / rect.height) * 2 + 1
+      );
+
+      cameraRaycasterRef.current.setFromCamera(pointer, camera);
+      const intersects = cameraRaycasterRef.current.intersectObject(floor);
+
+      if (intersects.length > 0) {
+        const hit = intersects[0].point;
+        if (touchStateRef.current.isDragging && touchStateRef.current.draggedId) {
+          const id = touchStateRef.current.draggedId;
+          const target = placedItems.find((pi) => pi.id === id);
+          if (target) {
+            target.object.position.x = hit.x;
+            target.object.position.z = hit.z;
+          }
+        } else {
+          cameraReticleRef.current?.parent?.position.set(hit.x, 0.005, hit.z);
+        }
+      }
+    } else if (e.touches.length === 2 && touchStateRef.current.draggedId) {
+      const t1 = e.touches[0];
+      const t2 = e.touches[1];
+      const currentDist = Math.hypot(t2.clientX - t1.clientX, t2.clientY - t1.clientY);
+      const currentAngle = Math.atan2(t2.clientY - t1.clientY, t2.clientX - t1.clientX);
+
+      const target = placedItems.find((pi) => pi.id === touchStateRef.current.draggedId);
+      if (target && touchStateRef.current.initialDistance > 0) {
+        const scaleFactor = currentDist / touchStateRef.current.initialDistance;
+        const newScale = Math.max(0.5, Math.min(1.6, touchStateRef.current.initialScale * scaleFactor));
+        target.object.scale.setScalar(newScale);
+
+        const angleDelta = currentAngle - touchStateRef.current.initialAngle;
+        const newRot = touchStateRef.current.initialRotY - angleDelta;
+        target.object.rotation.y = newRot;
+
+        target.scale = newScale;
+        target.rotationY = newRot;
+      }
+    }
+  };
+
+  const handleTouchEnd = () => {
+    if (!touchStateRef.current.hasMoved && !touchStateRef.current.isDragging) {
+      handleCameraCanvasClick();
+    }
+    touchStateRef.current.isDragging = false;
+    touchStateRef.current.hasMoved = false;
   };
 
   // Manipulation Controls for active placed item in Camera AR
@@ -607,6 +778,7 @@ export default function ArView() {
         return pi;
       })
     );
+    if (navigator.vibrate) navigator.vibrate(10);
   };
 
   const scaleActiveItem = (factorDelta: number) => {
@@ -621,6 +793,7 @@ export default function ArView() {
         return pi;
       })
     );
+    if (navigator.vibrate) navigator.vibrate(10);
   };
 
   const setItemElevation = (elevationMeters: number) => {
@@ -634,6 +807,7 @@ export default function ArView() {
         return pi;
       })
     );
+    if (navigator.vibrate) navigator.vibrate(10);
     showToast(`Elevation: ${elevationMeters > 0 ? `+${elevationMeters}m` : 'Floor'}`);
   };
 
@@ -656,7 +830,6 @@ export default function ArView() {
     showToast('Cleared all placed furniture');
   };
 
-  // Snapshot composite photo (Video feed + 3D furniture)
   const handleCaptureArPhoto = () => {
     if (!cameraVideoRef.current || !cameraCanvasRef.current) return;
     const video = cameraVideoRef.current;
@@ -675,7 +848,8 @@ export default function ArView() {
     a.download = `ar-room-${selectedItem?.id || 'placement'}.png`;
     a.href = snapCanvas.toDataURL('image/png');
     a.click();
-    showToast('📸 AR Photo saved!');
+    if (navigator.vibrate) navigator.vibrate(30);
+    showToast('📸 AR Photo saved to photos!');
   };
 
   // Launch Native WebXR AR Session
@@ -735,7 +909,7 @@ export default function ArView() {
           </button>
           <button
             className={`ar-view-mode-tab ${viewMode === 'camera-ar' ? 'active' : ''}`}
-            onClick={startCameraRoomAr}
+            onClick={() => startCameraRoomAr()}
           >
             📷 Live Room AR
           </button>
@@ -751,7 +925,7 @@ export default function ArView() {
             {viewMode === 'camera-ar'
               ? 'Room AR Active'
               : isArSupported
-              ? 'ARCore Available'
+              ? 'ARCore Ready'
               : 'Studio Preview'}
           </span>
         </div>
@@ -785,28 +959,28 @@ export default function ArView() {
                   <span className="ar-category-tag">{selectedItem.category}</span>
                 </div>
                 <div className="ar-item-dimensions">
-                  Real Dimensions:{' '}
+                  Dimensions:{' '}
                   <strong>
-                    {selectedItem.size.w.toFixed(2)}m (W) × {selectedItem.size.h.toFixed(2)}m (H) × {selectedItem.size.d.toFixed(2)}m (D)
+                    {selectedItem.size.w.toFixed(2)}m × {selectedItem.size.h.toFixed(2)}m × {selectedItem.size.d.toFixed(2)}m
                   </strong>
                 </div>
               </div>
 
-              {/* Studio Visual Tools */}
+              {/* Studio Visual Tools (Scrollable on mobile) */}
               <div className="ar-studio-controls">
                 <button
                   className={`ar-ctrl-btn ${showHumanScale ? 'active' : ''}`}
                   onClick={() => setShowHumanScale(!showHumanScale)}
                   title="Show 1.75m human silhouette for instant size comparison"
                 >
-                  🧍 {showHumanScale ? 'Human Scale (1.75m)' : 'Scale Guide'}
+                  🧍 {showHumanScale ? 'Human (1.75m)' : 'Scale Guide'}
                 </button>
                 <button
                   className={`ar-ctrl-btn ${showDimensions ? 'active' : ''}`}
                   onClick={() => setShowDimensions(!showDimensions)}
                   title="Toggle dimension measurement lines"
                 >
-                  📐 {showDimensions ? 'Hide BBox' : 'Dimensions'}
+                  📐 {showDimensions ? 'Hide Box' : 'Dimensions'}
                 </button>
                 <button
                   className={`ar-ctrl-btn ${isAutoRotate ? 'active' : ''}`}
@@ -853,7 +1027,7 @@ export default function ArView() {
           <div className="ar-stage-launch-bar">
             <button
               className="btn-primary-action"
-              onClick={startCameraRoomAr}
+              onClick={() => startCameraRoomAr()}
               disabled={isLoadingModel}
             >
               📷 Launch Live Room AR
@@ -873,7 +1047,7 @@ export default function ArView() {
                 onClick={handleCopyLanLink}
                 title="Copy link to open on phone"
               >
-                📲 Copy Mobile Link
+                📲 Copy Link
               </button>
             )}
           </div>
@@ -882,7 +1056,7 @@ export default function ArView() {
 
       {/* ── STAGE 2: LIVE CAMERA ROOM AR ────────────────────────────────────── */}
       {viewMode === 'camera-ar' && (
-        <div className="ar-camera-stage">
+        <div className={`ar-camera-stage ${isFullscreenAr ? 'fullscreen' : ''}`}>
           <video
             ref={cameraVideoRef}
             className="ar-camera-feed"
@@ -894,6 +1068,9 @@ export default function ArView() {
             ref={cameraCanvasRef}
             className="ar-camera-3d-canvas"
             onPointerMove={handleCameraPointerMove}
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
             onClick={handleCameraCanvasClick}
           />
 
@@ -909,26 +1086,47 @@ export default function ArView() {
             </div>
           )}
 
+          {/* Gesture Hint for Mobile */}
+          {roomScanPhase === 'locked' && (
+            <div className="ar-gesture-hint">
+              <span>🖐️ Drag to move • Pinch to scale • Twist to rotate</span>
+            </div>
+          )}
+
           {/* Top In-Room HUD */}
           <div className="ar-room-hud-top">
             <div className="ar-room-instructions">
-              <span>{placedItems.length === 0 ? '👆 Tap room floor to place item' : `🛋️ Placed: ${placedItems.length} items`}</span>
+              <span>{placedItems.length === 0 ? '👆 Tap floor to place' : `🛋️ Placed: ${placedItems.length}`}</span>
               {selectedItem && <strong>({selectedItem.name})</strong>}
             </div>
             <div className="ar-room-top-actions">
               <button
                 className="btn-secondary-action"
+                onClick={toggleCameraFacing}
+                title="Flip between front and rear cameras"
+              >
+                🔄 Flip
+              </button>
+              <button
+                className="btn-secondary-action"
+                onClick={() => setIsFullscreenAr(!isFullscreenAr)}
+                title="Toggle fullscreen mobile view"
+              >
+                {isFullscreenAr ? '⛶ Exit' : '⛶ Full'}
+              </button>
+              <button
+                className="btn-secondary-action"
                 onClick={handleCaptureArPhoto}
                 title="Capture composite photo"
               >
-                📸 Snap Photo
+                📸 Snap
               </button>
               <button
                 className="btn-danger-action"
                 onClick={stopCameraRoomAr}
-                style={{ padding: '6px 14px', fontSize: '12px' }}
+                style={{ padding: '6px 12px', fontSize: '12px' }}
               >
-                ✕ Exit AR
+                ✕
               </button>
             </div>
           </div>
@@ -936,10 +1134,10 @@ export default function ArView() {
           {/* In-Room Bottom Manipulation Toolbar */}
           <div className="ar-room-toolbar">
             <div className="ar-toolbar-group">
-              <button className="ar-tool-btn" onClick={() => rotateActiveItem(-45)} title="Rotate Left">
+              <button className="ar-tool-btn" onClick={() => rotateActiveItem(-45)} title="Rotate Left 45°">
                 ↺ -45°
               </button>
-              <button className="ar-tool-btn" onClick={() => rotateActiveItem(45)} title="Rotate Right">
+              <button className="ar-tool-btn" onClick={() => rotateActiveItem(45)} title="Rotate Right 45°">
                 ↻ +45°
               </button>
             </div>
@@ -961,7 +1159,7 @@ export default function ArView() {
               <button className="ar-tool-btn" onClick={() => setItemElevation(0)} title="Snap to Floor">
                 Floor
               </button>
-              <button className="ar-tool-btn" onClick={() => setItemElevation(0.45)} title="Elevate to Coffee Table">
+              <button className="ar-tool-btn" onClick={() => setItemElevation(0.45)} title="Elevate to Table Height">
                 +0.45m
               </button>
             </div>
@@ -971,12 +1169,12 @@ export default function ArView() {
             <div className="ar-toolbar-group">
               {selectedPlacedId && (
                 <button className="ar-tool-btn" onClick={deleteActiveItem} title="Delete selected item" style={{ color: '#ef4444' }}>
-                  🗑️ Delete
+                  🗑️
                 </button>
               )}
               {placedItems.length > 0 && (
-                <button className="ar-tool-btn" onClick={clearAllPlacedItems} title="Clear room">
-                  🧹 Clear All
+                <button className="ar-tool-btn" onClick={clearAllPlacedItems} title="Clear all placed furniture">
+                  🧹
                 </button>
               )}
             </div>
@@ -992,17 +1190,17 @@ export default function ArView() {
               ? '✨ Live Room AR Activated'
               : isArSupported
               ? '✨ WebXR AR Ready on this Device'
-              : '💡 True 1:1 Scale Spatial Placement'}
+              : '💡 1:1 Scale Mobile AR Placement'}
           </h4>
           <p>
             {viewMode === 'camera-ar'
-              ? 'Tap any point on your floor to spawn your selected furniture item. Use the in-room toolbar below to rotate, adjust size, raise onto coffee tables, and capture photo snapshots.'
-              : 'Inspect furniture with 360° turntable, human scale visualizer (1.75m comparison), and dimensions. Switch to "Live Room AR" to place items in your actual living space using your camera.'}
+              ? 'Tap any point on your floor to spawn your selected furniture item. Use touch gestures to drag, pinch to resize, or twist to rotate.'
+              : 'Inspect furniture in 3D Studio with human scale comparison (1.75m), dimensions, and finishes. Tap "Live Room AR" to place items right in your room.'}
           </p>
         </div>
         {viewMode !== 'camera-ar' && (
-          <button className="btn-secondary-action" onClick={startCameraRoomAr}>
-            📷 Start Camera AR
+          <button className="btn-secondary-action" onClick={() => startCameraRoomAr()}>
+            📷 Start Room AR
           </button>
         )}
       </div>
@@ -1048,6 +1246,7 @@ export default function ArView() {
                 className={`ar-furniture-card ${isSelected ? 'selected' : ''}`}
                 onClick={() => {
                   setSelectedItem(item);
+                  if (navigator.vibrate) navigator.vibrate(10);
                   showToast(`Selected: ${item.name}`);
                 }}
                 role="button"
