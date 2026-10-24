@@ -1,7 +1,13 @@
 import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import type { ArEngine, Furniture } from '../../../shared/types';
 
-export function createArEngine(): ArEngine {
+export interface ArEngineExtended extends ArEngine {
+  clearPlaced?: () => void;
+  getPlacedCount?: () => number;
+}
+
+export function createArEngine(): ArEngineExtended {
   let session: XRSession | null = null;
   let hitTestSource: XRHitTestSource | null = null;
   let localReferenceSpace: XRReferenceSpace | null = null;
@@ -14,20 +20,51 @@ export function createArEngine(): ArEngine {
   let animationFrameId: number | null = null;
   let selectedModel: Furniture | null = null;
 
+  const gltfLoader = new GLTFLoader();
+  const modelCache = new Map<string, THREE.Group>();
+  const placedObjects: THREE.Object3D[] = [];
+
   const onSelect = () => {
     if (!reticle || !reticle.visible || !scene) return;
 
-    const box = new THREE.Mesh(
-      new THREE.BoxGeometry(0.5, 0.5, 0.5),
-      new THREE.MeshStandardMaterial({ color: 0x38bdf8, roughness: 0.45, metalness: 0.05 })
-    );
-    box.name = selectedModel?.name ?? 'Placed box';
-    box.position.copy(reticle.position);
-    box.position.y += 0.25;
-    box.quaternion.copy(reticle.quaternion);
-    box.castShadow = true;
-    box.receiveShadow = true;
-    scene.add(box);
+    let objectToPlace: THREE.Object3D;
+    const cached = selectedModel?.model ? modelCache.get(selectedModel.model) : null;
+
+    if (cached) {
+      objectToPlace = cached.clone();
+      objectToPlace.traverse((child) => {
+        if ((child as THREE.Mesh).isMesh) {
+          child.castShadow = true;
+          child.receiveShadow = true;
+        }
+      });
+    } else {
+      // Fallback box with real dimensions
+      const w = selectedModel?.size.w ?? 0.5;
+      const h = selectedModel?.size.h ?? 0.5;
+      const d = selectedModel?.size.d ?? 0.5;
+      const box = new THREE.Mesh(
+        new THREE.BoxGeometry(w, h, d),
+        new THREE.MeshStandardMaterial({
+          color: 0xd5fa9c,
+          roughness: 0.35,
+          metalness: 0.1,
+          transparent: true,
+          opacity: 0.9,
+        })
+      );
+      box.position.y += h / 2;
+      box.castShadow = true;
+      box.receiveShadow = true;
+      objectToPlace = new THREE.Group();
+      objectToPlace.add(box);
+    }
+
+    objectToPlace.name = selectedModel?.name ?? 'Placed item';
+    objectToPlace.position.copy(reticle.position);
+    objectToPlace.quaternion.copy(reticle.quaternion);
+    placedObjects.push(objectToPlace);
+    scene.add(objectToPlace);
   };
 
   const disposeScene = () => {
@@ -42,7 +79,7 @@ export function createArEngine(): ArEngine {
     scene.clear();
   };
 
-  const engine: ArEngine = {
+  const engine: ArEngineExtended = {
     async isSupported(): Promise<boolean> {
       const xr = navigator.xr;
       return Boolean(xr?.isSessionSupported) &&
@@ -169,6 +206,7 @@ export function createArEngine(): ArEngine {
         if (activeSession) void activeSession.end().catch(() => undefined);
       }
 
+      placedObjects.length = 0;
       hostElement = null;
       overlayElement = null;
       selectedModel = null;
@@ -176,6 +214,43 @@ export function createArEngine(): ArEngine {
 
     async setModel(item: Furniture): Promise<void> {
       selectedModel = item;
+      if (item.model && !modelCache.has(item.model)) {
+        try {
+          const gltf = await gltfLoader.loadAsync(item.model);
+          const model = gltf.scene;
+          model.traverse((child) => {
+            if ((child as THREE.Mesh).isMesh) {
+              child.castShadow = true;
+              child.receiveShadow = true;
+            }
+          });
+
+          // Center geometry horizontally and ground bottom at y = 0
+          const bbox = new THREE.Box3().setFromObject(model);
+          const center = bbox.getCenter(new THREE.Vector3());
+          model.position.x = -center.x;
+          model.position.z = -center.z;
+          model.position.y = -bbox.min.y;
+
+          const group = new THREE.Group();
+          group.add(model);
+          modelCache.set(item.model, group);
+        } catch (err) {
+          console.warn('Failed to preload furniture GLB:', item.model, err);
+        }
+      }
+    },
+
+    clearPlaced(): void {
+      if (!scene) return;
+      for (const obj of placedObjects) {
+        scene.remove(obj);
+      }
+      placedObjects.length = 0;
+    },
+
+    getPlacedCount(): number {
+      return placedObjects.length;
     },
   };
 
