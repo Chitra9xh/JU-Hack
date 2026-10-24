@@ -1,0 +1,708 @@
+.ar-container {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 24px 20px 48px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.ar-top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.ar-nav-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #aebaaa;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.ar-nav-back:hover {
+  color: #d5fa9c;
+}
+
+.ar-title-group h1 {
+  margin: 4px 0 0;
+  font-size: clamp(1.5rem, 3.5vw, 2.2rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: #f4f4ee;
+}
+
+.ar-mode-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  background: rgba(29, 37, 30, 0.85);
+  border: 1px solid #3c493a;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #f4f4ee;
+  backdrop-filter: blur(12px);
+}
+
+.ar-mode-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #38bdf8;
+  box-shadow: 0 0 8px #38bdf8;
+}
+
+/* 3D Studio Stage */
+.ar-stage-card {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  max-height: 68vh;
+  min-height: 380px;
+  background: radial-gradient(circle at center, #1a221c, #0d120f);
+  border-radius: 24px;
+  overflow: hidden;
+  border: 1px solid #303930;
+  box-shadow: 0 24px 48px -12px rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ar-canvas-3d {
+  width: 100%;
+  height: 100%;
+  display: block;
+  outline: none;
+  cursor: grab;
+}
+
+.ar-canvas-3d:active {
+  cursor: grabbing;
+}
+
+/* Studio HUD Overlay */
+.ar-studio-hud {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  right: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.ar-item-details-pill {
+  pointer-events: auto;
+  background: rgba(17, 21, 18, 0.85);
+  border: 1px solid rgba(60, 73, 58, 0.8);
+  padding: 10px 16px;
+  border-radius: 14px;
+  backdrop-filter: blur(14px);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.ar-item-name {
+  font-size: 15px;
+  font-weight: 700;
+  color: #f4f4ee;
+}
+
+.ar-item-dimensions {
+  font-size: 12px;
+  color: #aebaaa;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ar-item-dimensions strong {
+  color: #d5fa9c;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+.ar-category-tag {
+  display: inline-block;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: rgba(213, 250, 156, 0.15);
+  color: #d5fa9c;
+  border: 1px solid rgba(213, 250, 156, 0.3);
+}
+
+.ar-studio-controls {
+  pointer-events: auto;
+  display: flex;
+  gap: 8px;
+}
+
+.ar-ctrl-btn {
+  background: rgba(17, 21, 18, 0.85);
+  border: 1px solid rgba(60, 73, 58, 0.8);
+  color: #f4f4ee;
+  border-radius: 10px;
+  padding: 6px 12px;
+  font-size: 12px;
+  cursor: pointer;
+  backdrop-filter: blur(12px);
+  transition: all 0.2s ease;
+}
+
+.ar-ctrl-btn:hover {
+  border-color: #d5fa9c;
+  color: #d5fa9c;
+}
+
+.ar-ctrl-btn.active {
+  background: rgba(213, 250, 156, 0.2);
+  border-color: #d5fa9c;
+  color: #d5fa9c;
+}
+
+/* Stage Bottom Launch Action */
+.ar-stage-launch-bar {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(17, 21, 18, 0.85);
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: 1px solid rgba(60, 73, 58, 0.8);
+  backdrop-filter: blur(16px);
+}
+
+/* Native AR Host and DOM Overlay styles */
+.ar-native-host {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  width: 100vw;
+  height: 100vh;
+  background: #000;
+}
+
+.ar-native-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 24px;
+}
+
+.ar-overlay-top {
+  pointer-events: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(17, 21, 18, 0.85);
+  padding: 10px 18px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(14px);
+  color: #f4f4ee;
+  font-size: 14px;
+}
+
+.ar-overlay-bottom {
+  pointer-events: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.ar-overlay-actions {
+  display: flex;
+  gap: 12px;
+}
+
+/* Catalog Filter and Cards */
+.ar-catalog-section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 8px;
+}
+
+.ar-catalog-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.ar-catalog-header h3 {
+  margin: 0;
+  font-size: 1.15rem;
+  letter-spacing: -0.02em;
+  color: #f4f4ee;
+}
+
+.ar-filter-tabs {
+  display: flex;
+  gap: 8px;
+  background: #1d251e;
+  padding: 4px;
+  border-radius: 999px;
+  border: 1px solid #3c493a;
+}
+
+.ar-filter-tab {
+  padding: 6px 14px;
+  border-radius: 999px;
+  border: none;
+  background: transparent;
+  color: #aebaaa;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.ar-filter-tab.active {
+  background: #d5fa9c;
+  color: #111512;
+}
+
+.ar-furniture-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  gap: 16px;
+}
+
+.ar-furniture-card {
+  background: #1d251e;
+  border: 1px solid #3c493a;
+  border-radius: 16px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+}
+
+.ar-furniture-card:hover {
+  border-color: #7d9675;
+  transform: translateY(-2px);
+  background: #232c24;
+}
+
+.ar-furniture-card.selected {
+  border-color: #d5fa9c;
+  background: #232f24;
+  box-shadow: 0 0 20px rgba(213, 250, 156, 0.15);
+}
+
+.ar-furniture-thumb-box {
+  width: 100%;
+  aspect-ratio: 1;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+  margin-bottom: 12px;
+  overflow: hidden;
+}
+
+.ar-furniture-thumb-box img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.45));
+  transition: transform 0.3s ease;
+}
+
+.ar-furniture-card:hover .ar-furniture-thumb-box img {
+  transform: scale(1.06);
+}
+
+.ar-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.ar-card-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: #f4f4ee;
+}
+
+.ar-card-meta {
+  font-size: 11px;
+  color: #aebaaa;
+  display: flex;
+  justify-content: space-between;
+  margin-top: 4px;
+}
+
+/* Device WebXR Info Banner */
+.ar-webxr-info-card {
+  background: #172019;
+  border: 1px solid #3c493a;
+  border-radius: 20px;
+  padding: 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.ar-webxr-info-text h4 {
+  margin: 0 0 6px;
+  font-size: 1.1rem;
+  color: #f4f4ee;
+  letter-spacing: -0.02em;
+}
+
+.ar-webxr-info-text p {
+  margin: 0;
+  color: #aebaaa;
+  font-size: 13px;
+  line-height: 1.6;
+  max-width: 600px;
+}
+
+/* Mode Switcher Tabs */
+.ar-view-mode-tabs {
+  display: flex;
+  background: #1d251e;
+  padding: 4px;
+  border-radius: 999px;
+  border: 1px solid #3c493a;
+  gap: 4px;
+}
+
+.ar-view-mode-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 18px;
+  border-radius: 999px;
+  border: none;
+  background: transparent;
+  color: #aebaaa;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.ar-view-mode-tab:hover {
+  color: #f4f4ee;
+}
+
+.ar-view-mode-tab.active {
+  background: #d5fa9c;
+  color: #111512;
+  box-shadow: 0 2px 10px rgba(213, 250, 156, 0.25);
+}
+
+/* Color / Fabric Swatches */
+.ar-swatches-card {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  z-index: 10;
+  background: rgba(17, 21, 18, 0.85);
+  border: 1px solid rgba(60, 73, 58, 0.8);
+  padding: 10px 14px;
+  border-radius: 16px;
+  backdrop-filter: blur(14px);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.ar-swatches-title {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #aebaaa;
+  font-weight: 600;
+}
+
+.ar-swatch-list {
+  display: flex;
+  gap: 8px;
+}
+
+.ar-swatch-btn {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  padding: 0;
+}
+
+.ar-swatch-btn:hover {
+  transform: scale(1.15);
+}
+
+.ar-swatch-btn.active {
+  border-color: #d5fa9c;
+  box-shadow: 0 0 10px rgba(213, 250, 156, 0.5);
+  transform: scale(1.18);
+}
+
+/* Live Camera AR Stage */
+.ar-camera-stage {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  max-height: 70vh;
+  min-height: 400px;
+  background: #090c0a;
+  border-radius: 24px;
+  overflow: hidden;
+  border: 1px solid #303930;
+  box-shadow: 0 24px 48px -12px rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ar-camera-feed {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.ar-camera-3d-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  z-index: 2;
+  cursor: crosshair;
+}
+
+/* Room Scanning Radar Overlay */
+.ar-scan-radar-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle, rgba(16, 24, 18, 0.4) 0%, rgba(9, 12, 10, 0.8) 100%);
+}
+
+.ar-scan-radar-box {
+  width: 240px;
+  height: 240px;
+  border: 1px solid rgba(213, 250, 156, 0.3);
+  border-radius: 50%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: inset 0 0 30px rgba(213, 250, 156, 0.08);
+}
+
+.ar-scan-radar-sweep {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: conic-gradient(from 0deg, transparent 70%, rgba(213, 250, 156, 0.35) 100%);
+  animation: radarRotate 2s linear infinite;
+}
+
+@keyframes radarRotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.ar-scan-radar-text {
+  margin-top: 24px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #d5fa9c;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(17, 21, 18, 0.85);
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: 1px solid rgba(213, 250, 156, 0.3);
+  backdrop-filter: blur(12px);
+}
+
+/* In-Room Top HUD */
+.ar-room-hud-top {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  right: 16px;
+  z-index: 10;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  pointer-events: none;
+}
+
+.ar-room-instructions {
+  pointer-events: auto;
+  background: rgba(17, 21, 18, 0.85);
+  border: 1px solid rgba(60, 73, 58, 0.8);
+  padding: 8px 16px;
+  border-radius: 999px;
+  color: #f4f4ee;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  backdrop-filter: blur(14px);
+}
+
+.ar-room-top-actions {
+  pointer-events: auto;
+  display: flex;
+  gap: 8px;
+}
+
+/* In-Room Bottom Manipulation Toolbar */
+.ar-room-toolbar {
+  position: absolute;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  background: rgba(17, 21, 18, 0.88);
+  border: 1px solid rgba(60, 73, 58, 0.85);
+  padding: 8px 16px;
+  border-radius: 20px;
+  backdrop-filter: blur(16px);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
+  max-width: 90%;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.6);
+}
+
+.ar-toolbar-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.ar-toolbar-divider {
+  width: 1px;
+  height: 24px;
+  background: #3c493a;
+}
+
+.ar-tool-btn {
+  background: rgba(29, 37, 30, 0.8);
+  border: 1px solid #3c493a;
+  color: #f4f4ee;
+  padding: 6px 12px;
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.ar-tool-btn:hover {
+  border-color: #d5fa9c;
+  color: #d5fa9c;
+}
+
+.ar-tool-btn.active {
+  background: rgba(213, 250, 156, 0.2);
+  border-color: #d5fa9c;
+  color: #d5fa9c;
+}
+
+/* Flash Toast */
+.tryon-flash-toast {
+  position: fixed;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(213, 250, 156, 0.95);
+  color: #111512;
+  font-weight: 700;
+  font-size: 14px;
+  padding: 10px 24px;
+  border-radius: 999px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  z-index: 10000;
+  animation: toastFade 0.25s ease;
+}
+
+@keyframes toastFade {
+  from { opacity: 0; transform: translate(-50%, 10px); }
+  to { opacity: 1; transform: translate(-50%, 0); }
+}
+
+@media (max-width: 768px) {
+  .ar-stage-card, .ar-camera-stage {
+    aspect-ratio: 4 / 3;
+    min-height: 320px;
+  }
+
+  .ar-studio-hud {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .ar-swatches-card {
+    position: static;
+    margin-top: 8px;
+    justify-content: center;
+  }
+
+  .ar-furniture-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .ar-room-toolbar {
+    max-width: 95%;
+    padding: 6px 10px;
+    gap: 6px;
+  }
+}
+

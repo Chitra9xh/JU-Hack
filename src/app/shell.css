@@ -47,6 +47,56 @@ body {
   text-underline-offset: 5px;
 }
 
+.shell-nav {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.shell-nav-link {
+  color: #aebaaa;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: 999px;
+  transition: all 0.2s ease;
+}
+
+.shell-nav-link:hover {
+  color: #f4f4ee;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.shell-nav-link.active {
+  color: #111512;
+  background: #d5fa9c;
+}
+
+.shell-loader-container {
+  min-height: 50vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  color: #aebaaa;
+  font-size: 14px;
+}
+
+.shell-loader-spinner {
+  width: 36px;
+  height: 36px;
+  border: 3px solid rgba(213, 250, 156, 0.2);
+  border-top-color: #d5fa9c;
+  border-radius: 50%;
+  animation: shellSpin 0.8s linear infinite;
+}
+
+@keyframes shellSpin {
+  to { transform: rotate(360deg); }
+}
+
 .shell-home {
   max-width: 1040px;
   margin: auto;
