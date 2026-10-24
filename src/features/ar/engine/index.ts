@@ -34,8 +34,8 @@ export function createArEngine(): ArEngineExtended {
       objectToPlace = cached.clone();
       objectToPlace.traverse((child) => {
         if ((child as THREE.Mesh).isMesh) {
-          child.castShadow = true;
-          child.receiveShadow = true;
+          child.castShadow = false;
+          child.receiveShadow = false;
         }
       });
     } else {
@@ -54,8 +54,6 @@ export function createArEngine(): ArEngineExtended {
         })
       );
       box.position.y += h / 2;
-      box.castShadow = true;
-      box.receiveShadow = true;
       objectToPlace = new THREE.Group();
       objectToPlace.add(box);
     }
@@ -117,22 +115,41 @@ export function createArEngine(): ArEngineExtended {
       camera.matrixAutoUpdate = false;
       scene.add(camera);
 
+      // Lightweight studio lighting without dynamic shadow maps
       const ambientLight = new THREE.HemisphereLight(0xffffff, 0x334155, 1.4);
       const directionalLight = new THREE.DirectionalLight(0xffffff, 1.2);
       directionalLight.position.set(1, 2, 1);
       scene.add(ambientLight, directionalLight);
 
       reticle = new THREE.Mesh(
-        new THREE.RingGeometry(0.08, 0.1, 32).rotateX(-Math.PI / 2),
-        new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.85, side: THREE.DoubleSide })
+        new THREE.RingGeometry(0.08, 0.11, 24).rotateX(-Math.PI / 2),
+        new THREE.MeshBasicMaterial({
+          color: 0xd5fa9c,
+          transparent: true,
+          opacity: 0.9,
+          depthTest: false,
+        })
       );
-      reticle.matrixAutoUpdate = false;
+      reticle.matrixAutoUpdate = true;
       reticle.visible = false;
       scene.add(reticle);
 
-      renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-      renderer.setSize(host.clientWidth || window.innerWidth, host.clientHeight || window.innerHeight, false);
+      // ── Ultra-Optimized WebGLRenderer for Mobile WebXR ──
+      // 1. antialias: false eliminates 4x MSAA framebuffer overhead that stalls mobile GPUs
+      // 2. powerPreference: 'high-performance' requests maximum mobile GPU clocks
+      // 3. precision: 'mediump' avoids 32-bit floating point shader register stalls
+      // 4. stencil: false minimizes framebuffer bandwidth
+      // 5. pixelRatio: 1 lets XRWebGLLayer determine native resolution without 2x oversampling
+      renderer = new THREE.WebGLRenderer({
+        alpha: true,
+        antialias: false,
+        powerPreference: 'high-performance',
+        precision: 'mediump',
+        stencil: false,
+        depth: true,
+      });
+      renderer.setPixelRatio(1);
+      renderer.shadowMap.enabled = false;
       renderer.outputColorSpace = THREE.SRGBColorSpace;
       renderer.xr.enabled = true;
       renderer.domElement.style.position = 'absolute';
@@ -142,23 +159,48 @@ export function createArEngine(): ArEngineExtended {
       host.appendChild(renderer.domElement);
 
       await renderer.xr.setSession(session);
+
+      // ── Hit-Testing Throttling & Pose Interpolation ──
+      // ARCore native hit-test queries (IPC calls) cause major frame drops if executed every 90/120Hz tick.
+      // We throttle hit-test queries to ~25Hz (every 40ms) and smoothly lerp/slerp the reticle at 60-120fps.
+      let lastHitTestTime = 0;
+      const HIT_TEST_INTERVAL_MS = 40;
+      let hasHitPose = false;
+      const targetPos = new THREE.Vector3();
+      const targetQuat = new THREE.Quaternion();
+      const targetScale = new THREE.Vector3(1, 1, 1);
+      const tempMatrix = new THREE.Matrix4();
+
       renderer.setAnimationLoop((_time: number, frame?: XRFrame) => {
-        if (!frame || !session || !hitTestSource || !localReferenceSpace || !renderer || !scene || !camera || !reticle) {
+        if (!frame || !session || !renderer || !scene || !camera || !reticle) {
           renderer?.render(scene!, camera!);
           return;
         }
 
-        const hitTestResults = frame.getHitTestResults(hitTestSource);
-        if (hitTestResults.length > 0) {
-          const pose = hitTestResults[0].getPose(localReferenceSpace);
-          if (pose) {
-            reticle.visible = true;
-            reticle.matrix.fromArray(pose.transform.matrix as unknown as number[]);
-            reticle.matrixWorld.copy(reticle.matrix);
-            reticle.matrix.decompose(reticle.position, reticle.quaternion, reticle.scale);
+        if (hitTestSource && localReferenceSpace) {
+          const now = performance.now();
+          if (now - lastHitTestTime >= HIT_TEST_INTERVAL_MS) {
+            lastHitTestTime = now;
+            const hitTestResults = frame.getHitTestResults(hitTestSource);
+            if (hitTestResults.length > 0) {
+              const pose = hitTestResults[0].getPose(localReferenceSpace);
+              if (pose) {
+                tempMatrix.fromArray(pose.transform.matrix as unknown as number[]);
+                tempMatrix.decompose(targetPos, targetQuat, targetScale);
+                hasHitPose = true;
+                reticle.visible = true;
+              }
+            } else {
+              hasHitPose = false;
+              reticle.visible = false;
+            }
           }
-        } else {
-          reticle.visible = false;
+
+          // Smoothly interpolate reticle at full display refresh rate (60/90/120Hz)
+          if (hasHitPose && reticle.visible) {
+            reticle.position.lerp(targetPos, 0.4);
+            reticle.quaternion.slerp(targetQuat, 0.4);
+          }
         }
 
         renderer.render(scene, renderer.xr.getCamera());

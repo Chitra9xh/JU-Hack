@@ -874,6 +874,19 @@
   .ar-card-name {
     font-size: 13px;
   }
+
+  .ar-native-overlay {
+    padding: 14px;
+  }
+
+  .ar-overlay-top {
+    flex-direction: column;
+    gap: 8px;
+    align-items: stretch;
+    border-radius: 18px;
+    text-align: center;
+    font-size: 13px;
+  }
 }
 
 
