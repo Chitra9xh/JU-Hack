@@ -19,15 +19,15 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  color: #aebaaa;
+  color: var(--muted);
   text-decoration: none;
-  font-size: 14px;
+  font-size: 17px;
   font-weight: 500;
   transition: color 0.2s ease;
 }
 
 .ar-nav-back:hover {
-  color: #d5fa9c;
+  color: var(--teal);
 }
 
 .ar-title-group h1 {
@@ -35,7 +35,7 @@
   font-size: clamp(1.5rem, 3.5vw, 2.2rem);
   font-weight: 700;
   letter-spacing: -0.03em;
-  color: #f4f4ee;
+  color: var(--navy);
 }
 
 .ar-mode-badge {
@@ -43,12 +43,12 @@
   align-items: center;
   gap: 8px;
   padding: 6px 14px;
-  background: rgba(29, 37, 30, 0.85);
-  border: 1px solid #3c493a;
+  background: rgba(255,255,255,0.85);
+  border: 1px solid var(--line);
   border-radius: 999px;
-  font-size: 13px;
+  font-size: 17px;
   font-weight: 600;
-  color: #f4f4ee;
+  color: var(--navy);
   backdrop-filter: blur(12px);
 }
 
@@ -56,8 +56,8 @@
   width: 9px;
   height: 9px;
   border-radius: 50%;
-  background: #38bdf8;
-  box-shadow: 0 0 8px #38bdf8;
+  background: var(--teal);
+  box-shadow: 0 0 8px var(--teal);
 }
 
 /* 3D Studio Stage */
@@ -67,11 +67,11 @@
   aspect-ratio: 16 / 9;
   max-height: 68vh;
   min-height: 380px;
-  background: radial-gradient(circle at center, #1a221c, #0d120f);
+  background: radial-gradient(circle at center, var(--beige), var(--sky));
   border-radius: 24px;
   overflow: hidden;
-  border: 1px solid #303930;
-  box-shadow: 0 24px 48px -12px rgba(0, 0, 0, 0.7);
+  border: 1px solid var(--line);
+  box-shadow: 0 24px 48px -12px rgba(47,65,86,0.10);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -104,8 +104,8 @@
 
 .ar-item-details-pill {
   pointer-events: auto;
-  background: rgba(17, 21, 18, 0.85);
-  border: 1px solid rgba(60, 73, 58, 0.8);
+  background: rgba(255,255,255,0.85);
+  border: 1px solid rgba(86,124,141,0.8);
   padding: 10px 16px;
   border-radius: 14px;
   backdrop-filter: blur(14px);
@@ -115,34 +115,34 @@
 }
 
 .ar-item-name {
-  font-size: 15px;
+  font-size: 18px;
   font-weight: 700;
-  color: #f4f4ee;
+  color: var(--navy);
 }
 
 .ar-item-dimensions {
-  font-size: 12px;
-  color: #aebaaa;
+  font-size: 16px;
+  color: var(--muted);
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
 .ar-item-dimensions strong {
-  color: #d5fa9c;
+  color: var(--teal);
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
 }
 
 .ar-category-tag {
   display: inline-block;
-  font-size: 10px;
+  font-size: 14px;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   padding: 2px 8px;
   border-radius: 999px;
-  background: rgba(213, 250, 156, 0.15);
-  color: #d5fa9c;
-  border: 1px solid rgba(213, 250, 156, 0.3);
+  background: rgba(86,124,141,0.15);
+  color: var(--teal);
+  border: 1px solid rgba(86,124,141,0.3);
 }
 
 .ar-studio-controls {
@@ -152,26 +152,26 @@
 }
 
 .ar-ctrl-btn {
-  background: rgba(17, 21, 18, 0.85);
-  border: 1px solid rgba(60, 73, 58, 0.8);
-  color: #f4f4ee;
+  background: rgba(255,255,255,0.85);
+  border: 1px solid rgba(86,124,141,0.8);
+  color: var(--navy);
   border-radius: 10px;
   padding: 6px 12px;
-  font-size: 12px;
+  font-size: 16px;
   cursor: pointer;
   backdrop-filter: blur(12px);
   transition: all 0.2s ease;
 }
 
 .ar-ctrl-btn:hover {
-  border-color: #d5fa9c;
-  color: #d5fa9c;
+  border-color: var(--teal);
+  color: var(--teal);
 }
 
 .ar-ctrl-btn.active {
-  background: rgba(213, 250, 156, 0.2);
-  border-color: #d5fa9c;
-  color: #d5fa9c;
+  background: rgba(86,124,141,0.2);
+  border-color: var(--teal);
+  color: var(--teal);
 }
 
 /* Stage Bottom Launch Action */
@@ -184,10 +184,10 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  background: rgba(17, 21, 18, 0.85);
+  background: rgba(255,255,255,0.85);
   padding: 8px 16px;
   border-radius: 999px;
-  border: 1px solid rgba(60, 73, 58, 0.8);
+  border: 1px solid rgba(86,124,141,0.8);
   backdrop-filter: blur(16px);
 }
 
@@ -216,13 +216,13 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: rgba(17, 21, 18, 0.85);
+  background: rgba(255,255,255,0.85);
   padding: 10px 18px;
   border-radius: 999px;
   border: 1px solid rgba(255, 255, 255, 0.15);
   backdrop-filter: blur(14px);
-  color: #f4f4ee;
-  font-size: 14px;
+  color: var(--navy);
+  font-size: 17px;
 }
 
 .ar-overlay-bottom {
@@ -258,16 +258,16 @@
   margin: 0;
   font-size: 1.15rem;
   letter-spacing: -0.02em;
-  color: #f4f4ee;
+  color: var(--navy);
 }
 
 .ar-filter-tabs {
   display: flex;
   gap: 8px;
-  background: #1d251e;
+  background: var(--white);
   padding: 4px;
   border-radius: 999px;
-  border: 1px solid #3c493a;
+  border: 1px solid var(--line);
 }
 
 .ar-filter-tab {
@@ -275,16 +275,16 @@
   border-radius: 999px;
   border: none;
   background: transparent;
-  color: #aebaaa;
-  font-size: 12px;
+  color: var(--muted);
+  font-size: 16px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
 .ar-filter-tab.active {
-  background: #d5fa9c;
-  color: #111512;
+  background: var(--teal);
+  color: var(--white);
 }
 
 .ar-furniture-grid {
@@ -294,8 +294,8 @@
 }
 
 .ar-furniture-card {
-  background: #1d251e;
-  border: 1px solid #3c493a;
+  background: var(--white);
+  border: 1px solid var(--line);
   border-radius: 16px;
   padding: 14px;
   display: flex;
@@ -306,15 +306,15 @@
 }
 
 .ar-furniture-card:hover {
-  border-color: #7d9675;
+  border-color: var(--teal);
   transform: translateY(-2px);
-  background: #232c24;
+  background: var(--beige);
 }
 
 .ar-furniture-card.selected {
-  border-color: #d5fa9c;
-  background: #232f24;
-  box-shadow: 0 0 20px rgba(213, 250, 156, 0.15);
+  border-color: var(--teal);
+  background: var(--beige);
+  box-shadow: 0 0 20px rgba(86,124,141,0.15);
 }
 
 .ar-furniture-thumb-box {
@@ -350,14 +350,14 @@
 }
 
 .ar-card-name {
-  font-size: 14px;
+  font-size: 17px;
   font-weight: 700;
-  color: #f4f4ee;
+  color: var(--navy);
 }
 
 .ar-card-meta {
-  font-size: 11px;
-  color: #aebaaa;
+  font-size: 15px;
+  color: var(--muted);
   display: flex;
   justify-content: space-between;
   margin-top: 4px;
@@ -365,8 +365,8 @@
 
 /* Device WebXR Info Banner */
 .ar-webxr-info-card {
-  background: #172019;
-  border: 1px solid #3c493a;
+  background: var(--beige);
+  border: 1px solid var(--line);
   border-radius: 20px;
   padding: 24px;
   display: flex;
@@ -379,14 +379,14 @@
 .ar-webxr-info-text h4 {
   margin: 0 0 6px;
   font-size: 1.1rem;
-  color: #f4f4ee;
+  color: var(--navy);
   letter-spacing: -0.02em;
 }
 
 .ar-webxr-info-text p {
   margin: 0;
-  color: #aebaaa;
-  font-size: 13px;
+  color: var(--muted);
+  font-size: 17px;
   line-height: 1.6;
   max-width: 600px;
 }
@@ -394,10 +394,10 @@
 /* Mode Switcher Tabs */
 .ar-view-mode-tabs {
   display: flex;
-  background: #1d251e;
+  background: var(--white);
   padding: 4px;
   border-radius: 999px;
-  border: 1px solid #3c493a;
+  border: 1px solid var(--line);
   gap: 4px;
 }
 
@@ -409,21 +409,21 @@
   border-radius: 999px;
   border: none;
   background: transparent;
-  color: #aebaaa;
-  font-size: 13px;
+  color: var(--muted);
+  font-size: 17px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
 .ar-view-mode-tab:hover {
-  color: #f4f4ee;
+  color: var(--navy);
 }
 
 .ar-view-mode-tab.active {
-  background: #d5fa9c;
-  color: #111512;
-  box-shadow: 0 2px 10px rgba(213, 250, 156, 0.25);
+  background: var(--teal);
+  color: var(--white);
+  box-shadow: 0 2px 10px rgba(86,124,141,0.25);
 }
 
 /* Color / Fabric Swatches */
@@ -432,8 +432,8 @@
   bottom: 20px;
   left: 20px;
   z-index: 10;
-  background: rgba(17, 21, 18, 0.85);
-  border: 1px solid rgba(60, 73, 58, 0.8);
+  background: rgba(255,255,255,0.85);
+  border: 1px solid rgba(86,124,141,0.8);
   padding: 10px 14px;
   border-radius: 16px;
   backdrop-filter: blur(14px);
@@ -443,10 +443,10 @@
 }
 
 .ar-swatches-title {
-  font-size: 11px;
+  font-size: 15px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: #aebaaa;
+  color: var(--muted);
   font-weight: 600;
 }
 
@@ -470,8 +470,8 @@
 }
 
 .ar-swatch-btn.active {
-  border-color: #d5fa9c;
-  box-shadow: 0 0 10px rgba(213, 250, 156, 0.5);
+  border-color: var(--teal);
+  box-shadow: 0 0 10px rgba(86,124,141,0.5);
   transform: scale(1.18);
 }
 
@@ -482,11 +482,11 @@
   aspect-ratio: 16 / 9;
   max-height: 70vh;
   min-height: 400px;
-  background: #090c0a;
+  background: var(--navy);
   border-radius: 24px;
   overflow: hidden;
-  border: 1px solid #303930;
-  box-shadow: 0 24px 48px -12px rgba(0, 0, 0, 0.7);
+  border: 1px solid var(--line);
+  box-shadow: 0 24px 48px -12px rgba(47,65,86,0.10);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -527,20 +527,20 @@
 .ar-scan-radar-box {
   width: 240px;
   height: 240px;
-  border: 1px solid rgba(213, 250, 156, 0.3);
+  border: 1px solid rgba(86,124,141,0.3);
   border-radius: 50%;
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: inset 0 0 30px rgba(213, 250, 156, 0.08);
+  box-shadow: inset 0 0 30px rgba(86,124,141,0.08);
 }
 
 .ar-scan-radar-sweep {
   position: absolute;
   inset: 0;
   border-radius: 50%;
-  background: conic-gradient(from 0deg, transparent 70%, rgba(213, 250, 156, 0.35) 100%);
+  background: conic-gradient(from 0deg, transparent 70%, rgba(86,124,141,0.35) 100%);
   animation: radarRotate 2s linear infinite;
 }
 
@@ -551,16 +551,16 @@
 
 .ar-scan-radar-text {
   margin-top: 24px;
-  font-size: 14px;
+  font-size: 17px;
   font-weight: 600;
-  color: #d5fa9c;
+  color: var(--teal);
   display: flex;
   align-items: center;
   gap: 8px;
-  background: rgba(17, 21, 18, 0.85);
+  background: rgba(255,255,255,0.85);
   padding: 8px 16px;
   border-radius: 999px;
-  border: 1px solid rgba(213, 250, 156, 0.3);
+  border: 1px solid rgba(86,124,141,0.3);
   backdrop-filter: blur(12px);
 }
 
@@ -579,12 +579,12 @@
 
 .ar-room-instructions {
   pointer-events: auto;
-  background: rgba(17, 21, 18, 0.85);
-  border: 1px solid rgba(60, 73, 58, 0.8);
+  background: rgba(255,255,255,0.85);
+  border: 1px solid rgba(86,124,141,0.8);
   padding: 8px 16px;
   border-radius: 999px;
-  color: #f4f4ee;
-  font-size: 13px;
+  color: var(--navy);
+  font-size: 17px;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -604,8 +604,8 @@
   left: 50%;
   transform: translateX(-50%);
   z-index: 10;
-  background: rgba(17, 21, 18, 0.88);
-  border: 1px solid rgba(60, 73, 58, 0.85);
+  background: rgba(255,255,255,0.88);
+  border: 1px solid rgba(86,124,141,0.85);
   padding: 8px 16px;
   border-radius: 20px;
   backdrop-filter: blur(16px);
@@ -627,16 +627,16 @@
 .ar-toolbar-divider {
   width: 1px;
   height: 24px;
-  background: #3c493a;
+  background: var(--line);
 }
 
 .ar-tool-btn {
-  background: rgba(29, 37, 30, 0.8);
-  border: 1px solid #3c493a;
-  color: #f4f4ee;
+  background: rgba(255,255,255,0.8);
+  border: 1px solid var(--line);
+  color: var(--navy);
   padding: 6px 12px;
   border-radius: 10px;
-  font-size: 12px;
+  font-size: 16px;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -646,14 +646,14 @@
 }
 
 .ar-tool-btn:hover {
-  border-color: #d5fa9c;
-  color: #d5fa9c;
+  border-color: var(--teal);
+  color: var(--teal);
 }
 
 .ar-tool-btn.active {
-  background: rgba(213, 250, 156, 0.2);
-  border-color: #d5fa9c;
-  color: #d5fa9c;
+  background: rgba(86,124,141,0.2);
+  border-color: var(--teal);
+  color: var(--teal);
 }
 
 /* Flash Toast */
@@ -662,10 +662,10 @@
   bottom: 28px;
   left: 50%;
   transform: translateX(-50%);
-  background: rgba(213, 250, 156, 0.95);
-  color: #111512;
+  background: rgba(86,124,141,0.95);
+  color: var(--white);
   font-weight: 700;
-  font-size: 14px;
+  font-size: 17px;
   padding: 10px 24px;
   border-radius: 999px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
@@ -712,10 +712,10 @@
 /* Gesture Hint Pill for Mobile */
 .ar-gesture-hint {
   pointer-events: none;
-  background: rgba(17, 21, 18, 0.85);
-  border: 1px solid rgba(213, 250, 156, 0.3);
-  color: #d5fa9c;
-  font-size: 11px;
+  background: rgba(255,255,255,0.85);
+  border: 1px solid rgba(86,124,141,0.3);
+  color: var(--teal);
+  font-size: 15px;
   font-weight: 600;
   padding: 6px 14px;
   border-radius: 999px;
@@ -759,7 +759,7 @@
     flex: 1;
     justify-content: center;
     padding: 10px 12px;
-    font-size: 13px;
+    font-size: 17px;
     min-height: 44px;
   }
 
@@ -799,7 +799,7 @@
     white-space: nowrap;
     padding: 8px 14px;
     min-height: 42px;
-    font-size: 13px;
+    font-size: 17px;
   }
 
   .ar-swatches-card {
@@ -825,7 +825,7 @@
   .ar-stage-launch-bar button {
     flex: 1;
     min-height: 46px;
-    font-size: 14px;
+    font-size: 17px;
   }
 
   .ar-room-hud-top {
@@ -835,7 +835,7 @@
   }
 
   .ar-room-instructions {
-    font-size: 12px;
+    font-size: 16px;
     padding: 6px 12px;
     max-width: 65%;
     overflow: hidden;
@@ -859,7 +859,7 @@
   .ar-tool-btn {
     min-height: 44px;
     padding: 6px 10px;
-    font-size: 12px;
+    font-size: 16px;
   }
 
   .ar-furniture-grid {
@@ -872,7 +872,7 @@
   }
 
   .ar-card-name {
-    font-size: 13px;
+    font-size: 17px;
   }
 
   .ar-native-overlay {
@@ -885,8 +885,57 @@
     align-items: stretch;
     border-radius: 18px;
     text-align: center;
-    font-size: 13px;
+    font-size: 17px;
   }
 }
 
 
+
+/* Premium visual shell. Camera/3D sizing and event surfaces are unchanged. */
+
+.tryon-container,.ar-container{max-width:1240px;padding:42px 24px 65px;gap:28px}
+.tryon-title-group h1,.ar-title-group h1{font-family:var(--serif);font-weight:400;font-size:clamp(30px,4vw,46px);letter-spacing:-1.2px;margin-top:12px}
+.tryon-nav-back,.ar-nav-back{font-size:15px;letter-spacing:.04em}
+.tryon-stage-card,.ar-stage-card,.ar-camera-stage{border-radius:6px;box-shadow:0 16px 45px #2f41560d;border-color:var(--line)}
+.tryon-stage-card{background:var(--beige)}
+.tryon-standby-overlay{background:var(--beige);backdrop-filter:none}
+.tryon-standby-overlay h2{font-family:var(--serif);font-size:clamp(27px,4vw,40px);font-weight:400;letter-spacing:-1px}
+.tryon-standby-icon{color:var(--teal);background:var(--white);border:1px solid var(--line);border-radius:6px;width:70px;height:70px}
+.tryon-standby-overlay p{color:var(--muted);font-size:17px;line-height:1.85}
+.btn-primary-action{background:var(--navy);color:var(--white);border-radius:4px;box-shadow:none;min-height:46px;font-size:16px;padding:14px 23px}
+.btn-primary-action:hover:not(:disabled){background:var(--teal)}
+.btn-secondary-action{background:var(--white);color:var(--navy);border-radius:4px;min-height:44px;font-size:16px;border-color:var(--line)}
+.btn-secondary-action:hover:not(:disabled){background:var(--beige)}
+.btn-danger-action{color:#963f3f;background:#fff5f3;border-radius:4px;min-height:44px}
+.btn-danger-action:hover:not(:disabled){background:#963f3f;color:white}
+.tryon-catalog-header h3,.ar-catalog-header h3{font-family:var(--serif);font-size:30px;font-weight:400;letter-spacing:-.6px}
+.tryon-catalog-header,.ar-catalog-header{align-items:center;gap:15px;flex-wrap:wrap}
+.tryon-catalog-header span,.ar-catalog-header span{color:var(--muted)!important;font-size:16px}
+.tryon-frames-grid,.ar-furniture-grid{grid-template-columns:repeat(5,minmax(0,1fr));gap:17px}
+.tryon-frame-card,.ar-furniture-card{padding:12px;border-color:var(--line);border-radius:5px;background:var(--white);box-shadow:none;min-width:0}
+.tryon-frame-card.selected,.ar-furniture-card.selected{border-color:var(--teal);background:var(--white);box-shadow:0 0 0 1px var(--teal)}
+.tryon-frame-card:hover,.ar-furniture-card:hover{background:var(--white);border-color:var(--teal);transform:translateY(-4px);box-shadow:0 10px 25px #2f41560c}
+.tryon-frame-thumb-box,.ar-furniture-thumb-box{background:var(--beige);border-radius:3px;aspect-ratio:1/1.05}
+.tryon-frame-card:nth-child(even) .tryon-frame-thumb-box,.ar-furniture-card:nth-child(even) .ar-furniture-thumb-box{background:#e9f0f5}
+.tryon-frame-thumb-box img,.ar-furniture-thumb-box img{filter:drop-shadow(0 8px 8px #2f415615);object-fit:contain}
+.tryon-frame-name,.ar-card-name{font-size:16px;line-height:1.5}.tryon-frame-id,.ar-card-meta{font-size:14px}
+.tryon-selected-indicator{background:var(--navy);color:white}
+.ar-card-header{align-items:start;flex-wrap:wrap;gap:7px}.ar-card-meta{flex-wrap:wrap;gap:5px}
+.ar-category-tag{color:var(--navy);background:var(--sky);border:0;font-size:12px}
+.tryon-fit-panel,.tryon-analysis-result-card,.ar-webxr-info-card{background:var(--beige);border:1px solid var(--line);border-radius:5px;box-shadow:none}
+.tryon-fit-stepper,.tryon-fit-btn,.tryon-fit-reset{color:var(--navy);border-color:var(--line)}
+.tryon-fit-value{color:var(--navy)}
+.tryon-status-badge,.ar-mode-badge{background:var(--beige);color:var(--navy);border-color:var(--line);font-size:15px;box-shadow:none}
+.tryon-status-dot.active,.ar-mode-dot{background:var(--teal);box-shadow:none}
+.ar-view-mode-tabs,.ar-filter-tabs{border-radius:4px;background:var(--beige);border-color:var(--line)}
+.ar-view-mode-tab,.ar-filter-tab{color:var(--navy);border-radius:3px;min-height:44px}
+.ar-view-mode-tab.active,.ar-filter-tab.active{background:var(--navy);color:var(--white);box-shadow:none}
+.ar-item-details-pill,.ar-ctrl-btn,.ar-swatches-card,.ar-stage-launch-bar,.ar-room-instructions,.ar-room-toolbar,.ar-tool-btn,.ar-overlay-top{background:rgba(255,255,255,.96);border-color:var(--line);color:var(--navy);backdrop-filter:none;box-shadow:0 5px 20px #2f41560c;border-radius:5px}
+.ar-ctrl-btn{min-height:44px}.ar-ctrl-btn.active,.ar-tool-btn.active{background:var(--sky);color:var(--navy);border-color:var(--teal)}
+.ar-item-name,.ar-item-dimensions,.ar-swatches-title{color:var(--navy)}
+.ar-swatch-btn{width:32px;height:32px;outline-offset:3px}.ar-swatch-btn.active{border-color:var(--navy);box-shadow:0 0 0 2px white,0 0 0 3px var(--teal)}
+.tryon-flash-toast{background:var(--navy);color:var(--white);box-shadow:0 8px 25px #2f415625}
+/* Live tracking guidance stays legible on arbitrary camera images. */
+.tryon-scan-label,.tryon-analysis-hud,.tryon-telemetry-pill,.tryon-active-badge,.ar-gesture-hint,.ar-scan-radar-text{background:rgba(47,65,86,.93);color:var(--white);border-color:var(--sky)}
+.tryon-analysis-hud strong,.tryon-analysis-hud .analysis-title,.tryon-analysis-hud .analysis-metrics,.tryon-analysis-hud .analysis-progress-label,.tryon-telemetry-pill strong{color:var(--white)}
+@media(max-width:760px){.tryon-container,.ar-container{padding:28px 16px 45px;gap:22px}.tryon-frames-grid,.ar-furniture-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.ar-room-hud-top{flex-direction:column;align-items:stretch;gap:8px}.ar-room-instructions{max-width:100%;white-space:normal;justify-content:center;font-size:15px}.ar-room-top-actions{justify-content:center;flex-wrap:wrap;gap:5px}.ar-room-top-actions button{padding:8px 10px;min-height:44px}.ar-gesture-hint{top:120px;font-size:13px;max-width:95%;white-space:normal;text-align:center}.ar-stage-launch-bar{flex-wrap:wrap}.ar-stage-launch-bar button{font-size:15px;white-space:normal}.ar-stage-launch-bar button span{display:none}.ar-card-meta{font-size:13px}.ar-filter-tabs{max-width:100%;flex-wrap:wrap}.ar-filter-tab{font-size:15px;padding:9px 12px}.ar-swatches-card{position:absolute;bottom:130px;left:12px;width:auto;margin:0;padding:8px 12px}.tryon-catalog-header h3,.ar-catalog-header h3{font-size:27px}.tryon-stage-card{min-height:400px}.tryon-standby-overlay{padding:24px}.ar-room-toolbar{width:calc(100% - 24px);max-width:none}.ar-tool-btn{padding:6px 8px}.ar-room-toolbar .ar-toolbar-divider{display:none}}
