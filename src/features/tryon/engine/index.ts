@@ -172,6 +172,7 @@ export function createTryOnEngine(): TryOnEngineExtended {
   let analysisJawAcc    = 0;
   let analysisFired     = false;
   let glassesVisibleFlag = false; // controlled externally via setGlassesVisible()
+  let smoothedAutoScale = 1.0; // dynamically scales glasses to fit face in portrait/mobile view
 
   const engine: TryOnEngineExtended = {
     async start(video: HTMLVideoElement, canvas: HTMLCanvasElement): Promise<void> {
@@ -316,6 +317,18 @@ export function createTryOnEngine(): TryOnEngineExtended {
         ) {
           const now = performance.now();
 
+          // Dynamically adjust canvas and camera projection if video dimensions update (crucial on mobile)
+          if (
+            video.videoWidth > 0 && video.videoHeight > 0 &&
+            (canvas.width !== video.videoWidth || canvas.height !== video.videoHeight)
+          ) {
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            camera.aspect = video.videoWidth / video.videoHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(video.videoWidth, video.videoHeight, false);
+          }
+
           if (video.currentTime !== lastVideoTime || now - lastDetectTime >= 30) {
             lastVideoTime = video.currentTime;
             lastDetectTime = now;
@@ -455,13 +468,57 @@ export function createTryOnEngine(): TryOnEngineExtended {
                 }
               }
 
-              // No autoScale: the 3D model is already sized in real-world metres
-              // (stub = 0.152 m wide, GLB scaled to 0.14 m). Perspective projection
-              // handles the apparent size change with distance automatically.
-              // Only userScale (from fit controls) is applied.
+              // ── Adaptive Face Scaling (Crucial for Mobile & Portrait) ──
+              // On mobile portrait cameras, aspect ratios and focal length differences
+              // cause uncalibrated 3D models to project much smaller than the human face.
+              // We measure the face's actual temple-to-temple pixel width on screen, and
+              // dynamically scale the glasses so they span naturally across the temples (1.05x).
+              if (hasPose && results.faceLandmarks && results.faceLandmarks.length > 0) {
+                const lm = results.faceLandmarks[0];
+                const lm127 = lm[127]; // left temple
+                const lm356 = lm[356]; // right temple
+                const lm234 = lm[234]; // left cheekbone
+                const lm454 = lm[454]; // right cheekbone
+                const lm33  = lm[33];  // left eye outer corner
+                const lm263 = lm[263]; // right eye outer corner
+
+                const curVW = video.videoWidth || canvas.width || 1280;
+                const curVH = video.videoHeight || canvas.height || 720;
+
+                let facePixelWidth = 0;
+                if (lm127 && lm356) {
+                  facePixelWidth = Math.hypot(
+                    (lm356.x - lm127.x) * curVW,
+                    (lm356.y - lm127.y) * curVH
+                  );
+                } else if (lm234 && lm454) {
+                  facePixelWidth = Math.hypot(
+                    (lm454.x - lm234.x) * curVW,
+                    (lm454.y - lm234.y) * curVH
+                  ) * 1.05;
+                } else if (lm33 && lm263) {
+                  facePixelWidth = Math.hypot(
+                    (lm263.x - lm33.x) * curVW,
+                    (lm263.y - lm33.y) * curVH
+                  ) * 1.74;
+                }
+
+                if (facePixelWidth > 15 && camera) {
+                  const depthMeters = Math.max(0.15, -targetPos.z);
+                  const fovRad = (camera.fov * Math.PI) / 180;
+                  // Baseline projected pixel width of 0.14m glasses model at this depth:
+                  const modelBasePixelWidth = (0.14 * curVH) / (depthMeters * 2 * Math.tan(fovRad / 2));
+                  if (modelBasePixelWidth > 5) {
+                    // Frame spans slightly past the temples (1.05x) for natural fit
+                    const targetAutoScale = (facePixelWidth * 1.05) / modelBasePixelWidth;
+                    const clampedAutoScale = Math.max(0.75, Math.min(3.5, targetAutoScale));
+                    smoothedAutoScale = smoothedAutoScale * 0.82 + clampedAutoScale * 0.18;
+                  }
+                }
+              }
 
               if (hasPose) {
-                glassesHolder.scale.setScalar(userScale);
+                glassesHolder.scale.setScalar(smoothedAutoScale * userScale);
 
                 // Smooth interpolation
                 if (!hasFirstPose) {
