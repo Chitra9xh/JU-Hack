@@ -892,7 +892,7 @@ export default function ArView() {
       {/* Top Bar with Mode Switcher & Status */}
       <div className="ar-top-bar">
         <div className="ar-title-group">
-          <Link to="/" className="ar-nav-back">← Reality Lab Home</Link>
+          <Link to="/" className="ar-nav-back">← Slow and Curious Home</Link>
           <h1>AR Spatial Placement</h1>
         </div>
 

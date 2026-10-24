@@ -322,3 +322,10 @@ button:disabled {
 .shell-nav-link { line-height: 1.5; }
 .shell-header-cta { line-height: 1.5; }
 .shell-brand small { letter-spacing: 2px; }
+
+/* Full team attribution wraps beneath the local site name. */
+.shell-brand { min-width: 0; }
+.shell-brand > span:not(.shell-brand-symbol) { white-space: normal; }
+.shell-brand .shell-team-credit { display: block; font-size: 13px; line-height: 1.65; letter-spacing: 0; font-weight: 400; max-width: 440px; }
+.shell-footer-brand span { display: block; margin: 12px 0 0; font-size: 14px; line-height: 1.7; letter-spacing: 0; text-transform: none; max-width: 600px; }
+@media (max-width: 1000px) { .shell-brand { flex: 1; } }

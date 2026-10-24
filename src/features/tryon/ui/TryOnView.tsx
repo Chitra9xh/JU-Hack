@@ -218,7 +218,7 @@ export default function TryOnView() {
       {/* Top Bar */}
       <div className="tryon-top-bar">
         <div className="tryon-title-group">
-          <Link to="/" className="tryon-nav-back">← Reality Lab Home</Link>
+          <Link to="/" className="tryon-nav-back">← Slow and Curious Home</Link>
           <h1>Virtual Try-On</h1>
         </div>
 
